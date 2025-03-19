@@ -1,7 +1,7 @@
 import AuthLayout from "@/layouts/auth-layout";
 import { __ } from "@/lib/utils";
 import { Head, Link, router, usePage } from "@inertiajs/react";
-import { App, Button, Divider, Form, Input, Typography } from "antd";
+import { App, Button, Form, Input, Typography } from "antd";
 import { useState } from "react";
 
 type RegisterFormType = {
@@ -97,11 +97,6 @@ export default function Register() {
           Register
         </Button>
       </Form>
-
-      <Divider plain>Or register with</Divider>
-      <Button type="primary" block>
-        Register using selnajaya email
-      </Button>
 
       <Typography.Paragraph style={{ marginTop: 16, textAlign: "center" }}>
         Already have an account? <Link href={route("login")}>Login here</Link>
