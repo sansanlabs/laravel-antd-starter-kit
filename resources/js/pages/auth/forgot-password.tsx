@@ -1,63 +1,60 @@
-// Components
-import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import AuthLayout from "@/layouts/auth-layout";
+import { Head, Link, router } from "@inertiajs/react";
+import { App, Button, Form, Input, Typography } from "antd";
+import { useState } from "react";
 
-import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
+type ForgotPasswordFormType = {
+  email: string;
+};
 
-export default function ForgotPassword({ status }: { status?: string }) {
-    const { data, setData, post, processing, errors } = useForm<Required<{ email: string }>>({
-        email: '',
+export default function ForgotPassword() {
+  const { message, notification } = App.useApp();
+
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [formForgotPassword] = Form.useForm();
+
+  const onFinish = (values: ForgotPasswordFormType) => {
+    router.post(route("password.email"), values, {
+      onStart: () => {
+        notification.destroy();
+        setIsProcessing(true);
+      },
+      onSuccess: ({ props }) => {
+        const { status } = props;
+        notification.info({
+          placement: "top",
+          message: "Info",
+          description: status as React.ReactNode,
+          duration: 0,
+        });
+        formForgotPassword.resetFields();
+      },
+      onError: () => {
+        message.error("Failed");
+      },
+      onFinish: () => {
+        setIsProcessing(false);
+      },
     });
+  };
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
+  return (
+    <AuthLayout title="Forgot password" description="Enter your email to receive a password reset link">
+      <Head title="Forgot password" />
 
-        post(route('password.email'));
-    };
+      <Form layout="vertical" form={formForgotPassword} onFinish={onFinish}>
+        <Form.Item label="Email" name="email" rules={[{ required: true }, { type: "email" }]}>
+          <Input allowClear />
+        </Form.Item>
 
-    return (
-        <AuthLayout title="Forgot password" description="Enter your email to receive a password reset link">
-            <Head title="Forgot password" />
+        <Button block type="primary" htmlType="submit" loading={isProcessing}>
+          Email password reset link
+        </Button>
+      </Form>
 
-            {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
-
-            <div className="space-y-6">
-                <form onSubmit={submit}>
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">Email address</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            name="email"
-                            autoComplete="off"
-                            value={data.email}
-                            autoFocus
-                            onChange={(e) => setData('email', e.target.value)}
-                            placeholder="email@example.com"
-                        />
-
-                        <InputError message={errors.email} />
-                    </div>
-
-                    <div className="my-6 flex items-center justify-start">
-                        <Button className="w-full" disabled={processing}>
-                            {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            Email password reset link
-                        </Button>
-                    </div>
-                </form>
-
-                <div className="text-muted-foreground space-x-1 text-center text-sm">
-                    <span>Or, return to</span>
-                    <TextLink href={route('login')}>log in</TextLink>
-                </div>
-            </div>
-        </AuthLayout>
-    );
+      <Typography.Paragraph style={{ marginTop: 16, textAlign: "center" }}>
+        Or, return to <Link href={route("login")}>login</Link>
+      </Typography.Paragraph>
+    </AuthLayout>
+  );
 }

@@ -1,9 +1,72 @@
-import AuthLayoutTemplate from '@/layouts/auth/auth-simple-layout';
+import AuthFooter from "@/components/auth-footer";
+import AuthHeader from "@/components/auth-header";
+import { Col, Layout, Row, Typography } from "antd";
 
-export default function AuthLayout({ children, title, description, ...props }: { children: React.ReactNode; title: string; description: string }) {
-    return (
-        <AuthLayoutTemplate title={title} description={description} {...props}>
+import AuthBg from "../../../public/assets/images/auth-bg.svg";
+
+type AuthLayoutType = {
+  children: React.ReactNode;
+  title: string;
+  description: string;
+};
+
+export default function AuthLayout({ children, title, description }: AuthLayoutType) {
+  return (
+    <Layout
+      style={{
+        minHeight: "100dvh",
+      }}
+    >
+      <Row>
+        <Col
+          sm={0}
+          md={12}
+          style={{
+            height: "100dvh",
+            background: `url('${AuthBg}')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            position: "sticky",
+            top: 0,
+          }}
+        />
+        <Col
+          sm={24}
+          md={12}
+          style={{
+            width: "100%",
+            minHeight: "100dvh",
+            maxWidth: "23rem",
+            marginInline: "auto",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 16,
+            paddingInline: 16,
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            <AuthHeader />
+
+            <Typography.Title level={4} style={{ margin: 0 }}>
+              {title}
+            </Typography.Title>
+            <Typography.Paragraph>{description}</Typography.Paragraph>
+
             {children}
-        </AuthLayoutTemplate>
-    );
+          </div>
+          <AuthFooter />
+        </Col>
+      </Row>
+    </Layout>
+  );
 }
