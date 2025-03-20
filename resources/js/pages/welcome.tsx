@@ -12,7 +12,7 @@ export default function Welcome() {
         <header className="mb-6 w-full max-w-[335px] text-sm not-has-[nav]:hidden lg:max-w-4xl">
           <nav className="flex items-center justify-end gap-4">
             {auth.user ? (
-              <Link href={route("dashboard")}>
+              <Link href={route("dashboard.index")}>
                 <Button>Dashboard</Button>
               </Link>
             ) : (
