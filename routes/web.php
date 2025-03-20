@@ -2,10 +2,10 @@
 
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use Inertia\Response;
 
-Route::get("/", function () {
-    return Inertia::render("welcome");
+Route::get("/", function (): Response {
+    return inertia("welcome");
 })->name("home");
 
 Route::middleware(["auth", "verified"])->group(function () {
