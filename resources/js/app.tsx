@@ -6,7 +6,7 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot } from "react-dom/client";
 
 import "../css/app.css";
-// import { initializeTheme } from "./hooks/use-appearance";
+import { initializeTheme } from "./hooks/use-appearance";
 import AntdConfigProvider from "./providers/antd-config-provider";
 import AntdThemeProvider from "./providers/antd-theme-provider";
 
@@ -34,3 +34,6 @@ createInertiaApp({
     color: "#124C9A",
   },
 });
+
+// This will set light / dark mode on load...
+initializeTheme();

@@ -1,13 +1,17 @@
+import { prefersDark, useAppearance } from "@/hooks/use-appearance";
 import { ThemeMode, ThemeProvider } from "antd-style";
-import { useState } from "react";
 
 export default function AntdThemeProvider({ children }: { children: React.ReactNode }) {
-  const [selectedAppearence, setSelectedAppearence] = useState(localStorage.getItem("appearance") || "light");
+  const { appearance, updateAppearance } = useAppearance();
+
+  const isDark = appearance === "dark" || (appearance === "system" && prefersDark());
+  const themeMode = appearance === "system" ? "auto" : appearance;
+  const appearanceApp = isDark ? "dark" : "light";
 
   return (
     <ThemeProvider
       onAppearanceChange={(value) => {
-        setSelectedAppearence(value);
+        updateAppearance(value);
         localStorage.setItem("appearance", value);
       }}
       theme={{
@@ -20,7 +24,7 @@ export default function AntdThemeProvider({ children }: { children: React.ReactN
           screenXL: 1200,
           screenXXL: 1600,
           fontFamily: "Geist",
-          colorBgBase: selectedAppearence === "dark" ? "#141414" : "#FFF",
+          colorBgBase: isDark ? "#141414" : "#FFF",
         },
         components: {
           Layout: {
@@ -35,8 +39,8 @@ export default function AntdThemeProvider({ children }: { children: React.ReactN
           },
         },
       }}
-      appearance={selectedAppearence}
-      themeMode={selectedAppearence as ThemeMode}
+      appearance={appearanceApp}
+      themeMode={themeMode as ThemeMode}
     >
       {children}
     </ThemeProvider>

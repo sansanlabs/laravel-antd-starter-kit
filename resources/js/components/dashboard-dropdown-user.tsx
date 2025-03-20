@@ -2,7 +2,16 @@ import { SharedData } from "@/types";
 import { router, usePage } from "@inertiajs/react";
 import { App, Avatar, Button, ConfigProvider, Dropdown, Flex } from "antd";
 import { useThemeMode } from "antd-style";
-import { LuChevronsUpDown, LuLanguages, LuLogOut, LuMoon, LuPalette, LuSun, LuUserRound } from "react-icons/lu";
+import {
+  LuChevronsUpDown,
+  LuLanguages,
+  LuLogOut,
+  LuMonitor,
+  LuMoon,
+  LuPalette,
+  LuSun,
+  LuUserRound,
+} from "react-icons/lu";
 
 export default function DashbordDropdownUser() {
   const {
@@ -128,6 +137,11 @@ export default function DashbordDropdownUser() {
               label: "Theme",
               icon: <LuPalette size={14} style={{ marginTop: 4 }} />,
               children: [
+                {
+                  key: "system",
+                  label: "System",
+                  icon: <LuMonitor size={14} />,
+                },
                 {
                   key: "light",
                   label: "Light",
