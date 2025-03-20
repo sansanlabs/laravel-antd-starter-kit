@@ -1,3 +1,2 @@
 /resources/views/vendor/notifications/email.blade.php
-/routes/web.php
-/routes/auth.php
+/routes/*
