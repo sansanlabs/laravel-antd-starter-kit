@@ -13,6 +13,7 @@ export default function AntdConfigProvider({ children }: AntdConfigProviderType)
       theme={{
         token: {
           colorPrimary: "#124C9A",
+          colorLink: "#124C9A",
           colorBgElevated: colorBgBase,
           colorBgLayout: colorBgBase,
           boxShadowSecondary: `inset 0 0 0 1px ${colorBorder}`,

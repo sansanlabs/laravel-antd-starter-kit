@@ -1,5 +1,6 @@
 import AuthLayout from "@/layouts/auth-layout";
-import { Head, Link, router } from "@inertiajs/react";
+import { __ } from "@/lib/utils";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import { App, Button, Checkbox, Flex, Form, Input, Typography } from "antd";
 import { useState } from "react";
 
@@ -10,7 +11,10 @@ type LoginFormType = {
 };
 
 export default function Login() {
+  const { locale } = usePage().props;
   const { message } = App.useApp();
+
+  console.log(locale);
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [formLogin] = Form.useForm();
@@ -43,7 +47,14 @@ export default function Login() {
       <Head title="Log in" />
 
       <Form layout="vertical" form={formLogin} onFinish={onFinish}>
-        <Form.Item label="Email" name="email" rules={[{ required: true }, { type: "email" }]}>
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[
+            { required: true, message: __(locale, "validation.required", { attribute: "email" }) },
+            { type: "email", message: __(locale, "validation.email", { attribute: "email" }) },
+          ]}
+        >
           <Input allowClear />
         </Form.Item>
         <Form.Item
@@ -56,7 +67,7 @@ export default function Login() {
             </Flex>
           }
           name="password"
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: __(locale, "validation.required", { attribute: "password" }) }]}
         >
           <Input.Password allowClear />
         </Form.Item>
