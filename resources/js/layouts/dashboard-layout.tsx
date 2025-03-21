@@ -2,17 +2,23 @@ import DashboardCompanyLogo from "@/components/dashboard-company-logo";
 import DashboardDropdownUser from "@/components/dashboard-dropdown-user";
 import DashboardFooter from "@/components/dashboard-footer";
 import DashboardHeader from "@/components/dashboard-header";
+import DashboardSidebarInnerMenu from "@/components/dashboard-sidebar-inner-menu";
 import DashboardSidebarMenu from "@/components/dashboard-sidebar-menu";
-import { Divider, Drawer, Flex, Layout, Typography } from "antd";
+import { Head } from "@inertiajs/react";
+import { Divider, Drawer, Flex, Layout, MenuProps, Typography } from "antd";
 import { useResponsive, useTheme } from "antd-style";
 import { useState } from "react";
 
+type MenuItemList = Required<MenuProps>["items"][number];
+
 type DashboardLayoutType = {
+  title: string;
+  extra?: React.ReactNode;
+  submenus?: MenuItemList[];
   children: React.ReactNode;
-  extra: React.ReactNode;
 };
 
-export default function DashboardLayout({ children, extra }: DashboardLayoutType) {
+export default function DashboardLayout({ title, submenus, extra, children }: DashboardLayoutType) {
   const { colorBorder } = useTheme();
   const { mobile } = useResponsive();
 
@@ -43,6 +49,7 @@ export default function DashboardLayout({ children, extra }: DashboardLayoutType
 
   return (
     <>
+      <Head title={title} />
       <Layout style={{ minHeight: "100dvh" }}>
         <Drawer
           onClose={() => {
@@ -97,27 +104,29 @@ export default function DashboardLayout({ children, extra }: DashboardLayoutType
               display: "flex",
               flex: 1,
               flexDirection: "column",
+              gap: 16,
             }}
           >
-            <div
+            <Flex
+              gap={16}
+              justify="space-between"
+              align="center"
               style={{
-                display: "flex",
-                flexDirection: "row",
-                gap: 16,
-                justifyContent: "space-between",
-                alignItems: "center",
                 paddingInline: 16,
                 paddingTop: 16,
+                minHeight: 48,
               }}
             >
               <Typography.Title level={4} style={{ margin: 0 }}>
-                Dashboard
+                {title}
               </Typography.Title>
               <Flex gap="small">{extra}</Flex>
-            </div>
+            </Flex>
 
-            <Flex flex={1} vertical gap={16}>
-              <Flex flex={1} vertical gap={16} style={{ padding: 16, overflow: "auto" }}>
+            <Flex className="px-4" gap={16} vertical={mobile} flex={1}>
+              <DashboardSidebarInnerMenu submenus={submenus} />
+
+              <Flex flex={1} vertical gap={16}>
                 {children}
               </Flex>
             </Flex>

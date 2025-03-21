@@ -40,6 +40,9 @@ export default function AntdConfigProvider({ children }: AntdConfigProviderType)
           Form: {
             verticalLabelPadding: 0,
           },
+          Table: {
+            headerBorderRadius: 0,
+          },
         },
       }}
     >

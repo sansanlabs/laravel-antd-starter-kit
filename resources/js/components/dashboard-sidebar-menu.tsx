@@ -1,5 +1,6 @@
-import { findParentPath } from "@/lib/utils";
-import { MenuItem } from "@/types";
+import { __, findParentPath } from "@/lib/utils";
+import { MenuItem, SharedData } from "@/types";
+import { Link, usePage } from "@inertiajs/react";
 import { ConfigProvider, Menu, MenuProps, theme } from "antd";
 import { LuChartPie, LuFileInput, LuFileOutput, LuGroup, LuMenu, LuMinus, LuPlus } from "react-icons/lu";
 
@@ -10,10 +11,12 @@ type DashboardSidebarMenuType = {
 type MenuItemList = Required<MenuProps>["items"][number];
 
 export default function DashboardSidebarMenu({ isSidebarPanelCollapsed }: DashboardSidebarMenuType) {
+  const { locale, activeMenu } = usePage<SharedData>().props;
+
   const items: MenuItemList[] = [
     {
       key: "dashboard",
-      label: "Dashboard",
+      label: <Link href={route("dashboard.index")}>{__(locale, "lang.dashboard")}</Link>,
       icon: <LuChartPie size={16} />,
     },
     {
@@ -114,8 +117,8 @@ export default function DashboardSidebarMenu({ isSidebarPanelCollapsed }: Dashbo
           mode="inline"
           items={items}
           theme="dark"
-          defaultOpenKeys={isSidebarPanelCollapsed ? [] : findParentPath(items as MenuItem[], "menu_level_3")}
-          defaultSelectedKeys={["menu_level_3"]}
+          defaultOpenKeys={isSidebarPanelCollapsed ? [] : findParentPath(items as MenuItem[], activeMenu)}
+          defaultSelectedKeys={[activeMenu]}
           expandIcon={({ isOpen }) => {
             return (
               <div style={{ position: "absolute", right: 8 }}>

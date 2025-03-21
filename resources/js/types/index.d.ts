@@ -15,12 +15,16 @@ export interface MenuItem {
 }
 
 export interface SharedData {
+  // default from handle inertia
   appName: string;
   locale: string;
   quote: { message: string; author: string };
   auth: Auth;
   ziggy: Config & { location: string };
   [key: string]: unknown;
+  // custom
+  activeMenu: string;
+  activeMenuContent: string;
 }
 
 export interface User {

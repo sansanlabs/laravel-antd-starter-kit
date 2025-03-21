@@ -21,24 +21,17 @@ export function findParentPath(data: MenuItem[], targetKey: string, parentPath: 
 }
 
 // i18n
-type TranslationType = {
-  locale: string;
-  key: string;
-  data?: object;
-};
-
-function replacePlaceholders(text, data) {
+function replacePlaceholders(text: string, data: Record<string, string>) {
   return text.replace(/:\w+/g, function (matched) {
-    let key = matched.slice(1);
+    const key = matched.slice(1);
     return key in data ? data[key] : matched;
   });
 }
 
-export function __(locale, key, data = {}): TranslationType {
+type TranslationKeys = keyof typeof en;
+export function __(locale: string, key: TranslationKeys, data: Record<string, string> = {}): string {
   const language = locale === "id" ? id : locale === "ja" ? ja : en;
 
-  let translation = language[key] ?? key;
-  translation = replacePlaceholders(translation, data);
-
-  return translation;
+  const translation = typeof language[key] === "string" ? language[key] : key;
+  return replacePlaceholders(translation, data);
 }

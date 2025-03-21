@@ -1,7 +1,7 @@
 import useLocale from "@/hooks/use-locale";
 import { __ } from "@/lib/utils";
 import { SharedData } from "@/types";
-import { router, usePage } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import { App, Avatar, Button, ConfigProvider, Dropdown, Flex } from "antd";
 import { ThemeMode, useThemeMode } from "antd-style";
 import {
@@ -27,9 +27,9 @@ export default function DashbordDropdownUser() {
 
   const onLogout = () => {
     const modalConfirm = modal.confirm({
-      title: String(__(locale, "modal_confirm.title")),
-      content: String(__(locale, "modal_confirm.desc")),
-      okText: String(__(locale, "auth.logout")),
+      title: __(locale, "modal_confirm.title"),
+      content: __(locale, "modal_confirm.desc"),
+      okText: __(locale, "auth.logout"),
       okButtonProps: { danger: true },
       cancelButtonProps: { disabled: false },
       onOk: () => {
@@ -44,11 +44,11 @@ export default function DashbordDropdownUser() {
             {
               onSuccess: () => {
                 message.destroy();
-                message.success(String(__(locale, "message.success")));
+                message.success(__(locale, "message.success"));
               },
               onError: () => {
                 message.destroy();
-                message.error(String(__(locale, "message.error")));
+                message.error(__(locale, "message.error"));
               },
               onFinish: resolve,
             }
@@ -65,18 +65,18 @@ export default function DashbordDropdownUser() {
       {
         onStart: () => {
           message.destroy();
-          message.loading(String(__(locale, "message.processing")));
+          message.loading(__(locale, "message.processing"));
         },
         onSuccess: ({ props }) => {
           const { locale } = props as unknown as SharedData;
           localStorage.setItem("locale", locale);
           setLocale(locale);
           message.destroy();
-          message.success(String(__(locale, "message.success")));
+          message.success(__(locale, "message.success"));
         },
         onError: () => {
           message.destroy();
-          message.error(String(__(locale, "message.error")));
+          message.error(__(locale, "message.error"));
         },
       }
     );
@@ -116,7 +116,6 @@ export default function DashbordDropdownUser() {
   return (
     <div style={{ margin: 8, height: 50 }}>
       <Dropdown
-        // open
         trigger={["click"]}
         menu={{
           selectable: true,
@@ -129,8 +128,13 @@ export default function DashbordDropdownUser() {
             },
             { type: "divider" },
             {
+              key: "settings",
+              label: <Link href={route("profile.index")}>{__(locale, "lang.settings")}</Link>,
+              icon: <LuUserRound size={14} />,
+            },
+            {
               key: "language",
-              label: String(__(locale, "lang.language")),
+              label: __(locale, "lang.language"),
               icon: <LuLanguages size={14} style={{ marginTop: 4 }} />,
 
               children: [
@@ -154,22 +158,22 @@ export default function DashbordDropdownUser() {
             },
             {
               key: "theme",
-              label: String(__(locale, "lang.theme")),
+              label: __(locale, "lang.theme"),
               icon: <LuPalette size={14} style={{ marginTop: 4 }} />,
               children: [
                 {
                   key: "auto",
-                  label: String(__(locale, "lang.auto")),
+                  label: __(locale, "lang.system"),
                   icon: <LuMonitor size={14} />,
                 },
                 {
                   key: "light",
-                  label: String(__(locale, "lang.light")),
+                  label: __(locale, "lang.light"),
                   icon: <LuSun size={14} />,
                 },
                 {
                   key: "dark",
-                  label: String(__(locale, "lang.dark")),
+                  label: __(locale, "lang.dark"),
                   icon: <LuMoon size={14} />,
                 },
               ],
@@ -178,7 +182,7 @@ export default function DashbordDropdownUser() {
             { type: "divider" },
             {
               key: "logout",
-              label: String(__(locale, "auth.logout")),
+              label: __(locale, "auth.logout"),
               icon: <LuLogOut size={14} />,
               danger: true,
               onClick: onLogout,
