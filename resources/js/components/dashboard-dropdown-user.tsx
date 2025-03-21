@@ -26,12 +26,17 @@ export default function DashbordDropdownUser() {
   const { setLocale } = useLocale();
 
   const onLogout = () => {
-    modal.confirm({
+    const modalConfirm = modal.confirm({
       title: String(__(locale, "modal_confirm.title")),
       content: String(__(locale, "modal_confirm.desc")),
       okText: String(__(locale, "auth.logout")),
       okButtonProps: { danger: true },
-      onOk: async () => {
+      cancelButtonProps: { disabled: false },
+      onOk: () => {
+        modalConfirm.update({
+          cancelButtonProps: { disabled: true },
+        });
+
         return new Promise((resolve) => {
           router.post(
             route("logout"),
