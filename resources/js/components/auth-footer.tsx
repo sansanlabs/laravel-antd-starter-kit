@@ -1,10 +1,11 @@
+import { SharedData } from "@/types";
+import { usePage } from "@inertiajs/react";
 import { ConfigProvider, Layout, Typography } from "antd";
 import { useTheme } from "antd-style";
 import { useEffect, useState } from "react";
 
-const appName = import.meta.env.VITE_APP_NAME;
-
 export default function AuthFooter() {
+  const { appName } = usePage<SharedData>().props;
   const { colorBorder } = useTheme();
   const [year, setYear] = useState(new Date().getFullYear());
 

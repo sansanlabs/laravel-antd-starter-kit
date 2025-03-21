@@ -1,11 +1,12 @@
-import { Link } from "@inertiajs/react";
+import { SharedData } from "@/types";
+import { Link, usePage } from "@inertiajs/react";
 import { Button, ConfigProvider, Flex, Typography } from "antd";
 
 import LogoIpsum from "../../../public/assets/images/logo-ipsum.svg";
 
-const appName = import.meta.env.VITE_APP_NAME;
-
 export default function DashboardCompanyLogo() {
+  const { appName } = usePage<SharedData>().props;
+
   return (
     <div style={{ margin: 8, height: 50 }}>
       <Link href="/">
