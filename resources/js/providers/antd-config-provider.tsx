@@ -1,15 +1,21 @@
+import useLocale from "@/hooks/use-locale";
 import { ConfigProvider } from "antd";
 import { useTheme } from "antd-style";
+import enUS from "antd/locale/en_US";
+import idID from "antd/locale/id_ID";
+import jaJP from "antd/locale/ja_JP";
 
 type AntdConfigProviderType = {
   children: React.ReactNode;
 };
 
 export default function AntdConfigProvider({ children }: AntdConfigProviderType) {
+  const { locale } = useLocale();
   const { colorBgBase, colorBorder, colorFillAlter } = useTheme();
 
   return (
     <ConfigProvider
+      locale={locale === "id" ? idID : locale === "ja" ? jaJP : enUS}
       theme={{
         token: {
           colorPrimary: "#124C9A",

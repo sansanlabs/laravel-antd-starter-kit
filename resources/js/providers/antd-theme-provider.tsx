@@ -4,15 +4,15 @@ import { ThemeMode, ThemeProvider } from "antd-style";
 export default function AntdThemeProvider({ children }: { children: React.ReactNode }) {
   const { appearance, updateAppearance } = useAppearance();
 
-  const isDark = appearance === "dark" || (appearance === "system" && prefersDark());
-  const themeMode = appearance === "system" ? "auto" : appearance;
+  const isDark = appearance === "dark" || (appearance === "auto" && prefersDark());
+  const themeMode = appearance === "auto" ? "auto" : appearance;
   const appearanceApp = isDark ? "dark" : "light";
 
   return (
     <ThemeProvider
-      onAppearanceChange={(value) => {
-        updateAppearance(value);
-        localStorage.setItem("appearance", value);
+      onThemeModeChange={(mode) => {
+        updateAppearance(mode);
+        localStorage.setItem("appearance", mode);
       }}
       theme={{
         cssVar: true,

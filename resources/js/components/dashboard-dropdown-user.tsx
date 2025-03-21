@@ -1,7 +1,9 @@
+import useLocale from "@/hooks/use-locale";
+import { __ } from "@/lib/utils";
 import { SharedData } from "@/types";
 import { router, usePage } from "@inertiajs/react";
 import { App, Avatar, Button, ConfigProvider, Dropdown, Flex } from "antd";
-import { useThemeMode } from "antd-style";
+import { ThemeMode, useThemeMode } from "antd-style";
 import {
   LuChevronsUpDown,
   LuLanguages,
@@ -16,16 +18,18 @@ import {
 export default function DashbordDropdownUser() {
   const {
     auth: { user: authUser },
+    locale,
   } = usePage<SharedData>().props;
 
   const { message, modal } = App.useApp();
-  const { setAppearance } = useThemeMode();
+  const { themeMode, setThemeMode } = useThemeMode();
+  const { setLocale } = useLocale();
 
   const onLogout = () => {
     modal.confirm({
-      title: "modal_confirm.title",
-      content: "modal_confirm.desc",
-      okText: "auth.logout",
+      title: String(__(locale, "modal_confirm.title")),
+      content: String(__(locale, "modal_confirm.desc")),
+      okText: String(__(locale, "auth.logout")),
       okButtonProps: { danger: true },
       onOk: async () => {
         return new Promise((resolve) => {
@@ -35,11 +39,11 @@ export default function DashbordDropdownUser() {
             {
               onSuccess: () => {
                 message.destroy();
-                message.success("message.success");
+                message.success(String(__(locale, "message.success")));
               },
               onError: () => {
                 message.destroy();
-                message.error("message.error");
+                message.error(String(__(locale, "message.error")));
               },
               onFinish: resolve,
             }
@@ -51,11 +55,23 @@ export default function DashbordDropdownUser() {
 
   const onChangeLanguage = (key: string) => {
     router.put(
-      route("localization.update", { language: key }),
+      route("localization.update", { locale: key }),
       {},
       {
-        onSuccess: () => {
-          //   setLocale(key);
+        onStart: () => {
+          message.destroy();
+          message.loading(String(__(locale, "message.processing")));
+        },
+        onSuccess: ({ props }) => {
+          const { locale } = props as unknown as SharedData;
+          localStorage.setItem("locale", locale);
+          setLocale(locale);
+          message.destroy();
+          message.success(String(__(locale, "message.success")));
+        },
+        onError: () => {
+          message.destroy();
+          message.error(String(__(locale, "message.error")));
         },
       }
     );
@@ -100,8 +116,7 @@ export default function DashbordDropdownUser() {
         menu={{
           selectable: true,
           multiple: true,
-          // selectedKeys: ["theme", "light", "language1"],
-          // openKeys: ["theme"],
+          selectedKeys: [locale, themeMode],
           items: [
             {
               key: "detail",
@@ -110,7 +125,7 @@ export default function DashbordDropdownUser() {
             { type: "divider" },
             {
               key: "language",
-              label: "Language",
+              label: String(__(locale, "lang.language")),
               icon: <LuLanguages size={14} style={{ marginTop: 4 }} />,
 
               children: [
@@ -134,31 +149,31 @@ export default function DashbordDropdownUser() {
             },
             {
               key: "theme",
-              label: "Theme",
+              label: String(__(locale, "lang.theme")),
               icon: <LuPalette size={14} style={{ marginTop: 4 }} />,
               children: [
                 {
-                  key: "system",
-                  label: "System",
+                  key: "auto",
+                  label: String(__(locale, "lang.auto")),
                   icon: <LuMonitor size={14} />,
                 },
                 {
                   key: "light",
-                  label: "Light",
+                  label: String(__(locale, "lang.light")),
                   icon: <LuSun size={14} />,
                 },
                 {
                   key: "dark",
-                  label: "Dark",
+                  label: String(__(locale, "lang.dark")),
                   icon: <LuMoon size={14} />,
                 },
               ],
-              onClick: ({ key }) => setAppearance(key),
+              onClick: ({ key }) => setThemeMode(key as ThemeMode),
             },
             { type: "divider" },
             {
               key: "logout",
-              label: "Logout",
+              label: String(__(locale, "auth.logout")),
               icon: <LuLogOut size={14} />,
               danger: true,
               onClick: onLogout,

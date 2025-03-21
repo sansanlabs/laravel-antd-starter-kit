@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 
 class LocalizationController extends Controller {
   public function update(Request $request): RedirectResponse {
-    $language = $request->validate([
-      "language" => ["required", "string", "max:2", "in:en,id,ja"],
-    ])["language"];
+    $locale = $request->validate([
+      "locale" => ["required", "string", "max:2", "in:en,id,ja"],
+    ])["locale"];
 
-    session()->put("locale", $language);
+    session()->put("locale", $locale);
 
     return back();
   }

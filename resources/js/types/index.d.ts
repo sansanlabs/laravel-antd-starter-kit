@@ -15,7 +15,8 @@ export interface MenuItem {
 }
 
 export interface SharedData {
-  name: string;
+  appName: string;
+  locale: string;
   quote: { message: string; author: string };
   auth: Auth;
   ziggy: Config & { location: string };
