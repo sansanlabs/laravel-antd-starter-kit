@@ -1,4 +1,20 @@
 {
+  "message.processing": "処理中 . . .",
+  "message.success": "成功",
+  "message.error": "失敗しました。後でもう一度お試しください。",
+
+  "modal_confirm.title": "操作の確認",
+  "modal_confirm.desc": "本当に続行しますか？この操作は元に戻せません。",
+
+  "lang.language": "言語",
+  "lang.theme": "テーマ",
+  "lang.auto": "自動",
+  "lang.light": "ライト",
+  "lang.dark": "ダーク",
+
+  "auth.login": "ログイン",
+  "auth.logout": "ログアウト",
+
   "auth.failed": "これらの認証情報は私たちの記録と一致しません。",
   "auth.password": "提供されたパスワードが間違っています。",
   "auth.throttle": "ログイン試行が多すぎます。:seconds 秒後に再試行してください。",

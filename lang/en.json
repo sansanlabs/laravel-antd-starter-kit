@@ -1,4 +1,20 @@
 {
+  "message.processing": "Processing . . .",
+  "message.success": "Success",
+  "message.error": "Failed, try again later",
+
+  "modal_confirm.title": "Confirm Action",
+  "modal_confirm.desc": "Are you sure you want to proceed? This process cannot be undone.",
+
+  "lang.language": "Language",
+  "lang.theme": "Theme",
+  "lang.auto": "Auto",
+  "lang.light": "Light",
+  "lang.dark": "Dark",
+
+  "auth.login": "Login",
+  "auth.logout": "Logout",
+
   "auth.failed": "These credentials do not match our records.",
   "auth.password": "The provided password is incorrect.",
   "auth.throttle": "Too many login attempts. Please try again in :seconds seconds.",

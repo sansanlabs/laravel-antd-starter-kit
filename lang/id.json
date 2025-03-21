@@ -1,4 +1,20 @@
 {
+  "message.processing": "Memproses . . .",
+  "message.success": "Berhasil",
+  "message.error": "Gagal, coba lagi nanti",
+
+  "modal_confirm.title": "Konfirmasi Tindakan",
+  "modal_confirm.desc": "Apakah Anda yakin ingin melanjutkan? Proses ini tidak dapat dibatalkan.",
+
+  "lang.language": "Bahasa",
+  "lang.theme": "Tema",
+  "lang.auto": "Otomatis",
+  "lang.light": "Terang",
+  "lang.dark": "Gelap",
+
+  "auth.login": "Masuk",
+  "auth.logout": "Keluar",
+
   "auth.failed": "Kredensial ini tidak cocok dengan data kami.",
   "auth.password": "Kata sandi yang diberikan salah.",
   "auth.throttle": "Terlalu banyak percobaan login. Silakan coba lagi dalam :seconds detik.",
