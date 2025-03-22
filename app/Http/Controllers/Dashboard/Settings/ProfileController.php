@@ -17,16 +17,17 @@ class ProfileController extends Controller {
 
   public function update(Request $request): RedirectResponse {
     $authUserId = auth()->id();
-    $dataValidated = $request->validate([
+    $validatedData = $request->validate([
       "name" => ["required", "string", "max:255"],
       "email" => ["required", "string", "lowercase", "email", "max:255", "unique:users,email,{$authUserId}"],
     ]);
 
     try {
-      $request->user()->fill($dataValidated);
+      $request->user()->fill($validatedData);
 
       if ($request->user()->isDirty("email")) {
         $request->user()->email_verified_at = null;
+        $request->user()->sendEmailVerificationNotification();
       }
 
       $request->user()->save();

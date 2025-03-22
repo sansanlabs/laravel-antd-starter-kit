@@ -18,13 +18,13 @@ class PasswordController extends Controller {
   }
 
   public function update(Request $request): RedirectResponse {
-    $dataValidated = $request->validate([
+    $validatedData = $request->validate([
       "current_password" => ["required", "current_password"],
       "password" => ["required", Password::defaults(), "confirmed"],
     ]);
 
     $request->user()->update([
-      "password" => Hash::make($dataValidated["password"]),
+      "password" => Hash::make($validatedData["password"]),
     ]);
 
     return back();
