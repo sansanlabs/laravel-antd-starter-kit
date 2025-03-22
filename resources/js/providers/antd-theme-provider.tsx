@@ -1,5 +1,5 @@
 import { prefersDark, useAppearance } from "@/hooks/use-appearance";
-import { ThemeMode, ThemeProvider } from "antd-style";
+import { ThemeProvider } from "antd-style";
 
 export default function AntdThemeProvider({ children }: { children: React.ReactNode }) {
   const { appearance, updateAppearance } = useAppearance();
@@ -12,7 +12,6 @@ export default function AntdThemeProvider({ children }: { children: React.ReactN
     <ThemeProvider
       onThemeModeChange={(mode) => {
         updateAppearance(mode);
-        localStorage.setItem("appearance", mode);
       }}
       theme={{
         cssVar: true,
@@ -40,7 +39,7 @@ export default function AntdThemeProvider({ children }: { children: React.ReactN
         },
       }}
       appearance={appearanceApp}
-      themeMode={themeMode as ThemeMode}
+      themeMode={themeMode}
     >
       {children}
     </ThemeProvider>

@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { useCallback, useEffect, useState } from "react";
 
 export type Appearance = "light" | "dark" | "auto";
@@ -48,7 +49,10 @@ export function initializeTheme() {
 }
 
 export function useAppearance() {
-  const [appearance, setAppearance] = useState<Appearance>("auto");
+  const appearanceCookie = Cookies.get("appearance") as Appearance | undefined;
+  const appearanceLocalStorage = localStorage.getItem("appearance") as Appearance | undefined;
+
+  const [appearance, setAppearance] = useState<Appearance>(appearanceCookie ?? appearanceLocalStorage ?? "auto");
 
   const updateAppearance = useCallback((mode: Appearance) => {
     setAppearance(mode);
