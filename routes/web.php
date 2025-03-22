@@ -15,7 +15,7 @@ Route::get("/", function (): Response {
 // Localization
 Route::put("/localization", [LocalizationController::class, "update"])->name("localization.update");
 
-Route::prefix("dashboard")->middleware(["auth", "verified"])->group(function (): void {
+Route::prefix("dashboard")->middleware(["auth", "verified", 'password.confirm'])->group(function (): void {
     // Dashboard
     Route::get("/", [DashboardController::class, "index"])->name("dashboard.index");
 
