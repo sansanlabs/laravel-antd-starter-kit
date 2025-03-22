@@ -1,4 +1,6 @@
 import { MenuItem } from "@/types";
+import { FormInstance } from "antd";
+import { MessageInstance } from "antd/lib/message/interface";
 
 import en from "../../../lang/en.json";
 import id from "../../../lang/id.json";
@@ -35,3 +37,26 @@ export function __(locale: string, key: TranslationKeys, data: Record<string, st
   const translation = typeof language[key] === "string" ? language[key] : key;
   return replacePlaceholders(translation, data);
 }
+
+// Handle form error message
+export const handleFormErrorMessages = (
+  errors: Record<string, string>,
+  message: MessageInstance,
+  form: FormInstance
+) => {
+  if (errors.error_server) {
+    message.error(errors.error_server);
+    return;
+  }
+
+  const errorsArray = Object.keys(errors).map((field) => ({
+    name: field,
+    errors: [errors[field]],
+  }));
+
+  form.setFields(errorsArray);
+
+  if (errorsArray.length > 0) {
+    form.scrollToField(errorsArray[0].name, { behavior: "smooth", block: "center" });
+  }
+};
