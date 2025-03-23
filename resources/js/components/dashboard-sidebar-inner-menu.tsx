@@ -22,9 +22,14 @@ export default function DashboardSidebarInnerMenu({ submenus }: DashboardSidebar
     <>
       {mobile && submenus && (
         <div
-          className="sticky top-20 z-20 flex min-h-0 overflow-auto"
           style={{
+            minHeight: 0,
             height: 38,
+            position: "sticky",
+            top: 80,
+            zIndex: 20,
+            display: "flex",
+            overflow: "auto",
           }}
         >
           <Dropdown
@@ -34,7 +39,7 @@ export default function DashboardSidebarInnerMenu({ submenus }: DashboardSidebar
               items: submenus,
             }}
           >
-            <Button block type="primary" className="!z-0">
+            <Button block type="primary">
               {__(locale, "lang.menu")}
             </Button>
           </Dropdown>
@@ -43,9 +48,13 @@ export default function DashboardSidebarInnerMenu({ submenus }: DashboardSidebar
 
       {!mobile && submenus && (
         <div
-          className="sticky top-[83px] flex min-h-0 overflow-auto"
           style={{
+            minHeight: 0,
             height: `${submenus.length * 38}px`,
+            position: "sticky",
+            top: 83,
+            display: "flex",
+            overflow: "auto",
           }}
         >
           <ConfigProvider
@@ -64,9 +73,13 @@ export default function DashboardSidebarInnerMenu({ submenus }: DashboardSidebar
           >
             <Menu
               theme="dark"
-              className="!-mt-1 !w-[230px] !border-none"
               defaultSelectedKeys={[activeMenuContent]}
               items={submenus}
+              style={{
+                marginTop: -4,
+                width: 230,
+                border: "none",
+              }}
             />
           </ConfigProvider>
         </div>

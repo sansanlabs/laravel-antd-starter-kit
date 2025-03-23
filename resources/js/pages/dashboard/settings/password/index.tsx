@@ -1,10 +1,16 @@
 import MenuSetting from "@/components/menu-setting";
 import SectionRequired from "@/components/section-required";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import { __ } from "@/lib/utils";
+import { __, handleFormErrorMessages } from "@/lib/utils";
 import { SharedData } from "@/types";
 import { router, usePage } from "@inertiajs/react";
 import { App, Button, Flex, Form, Input } from "antd";
+
+type PasswordFormType = {
+  current_password: string;
+  password: string;
+  password_confirmation: string;
+};
 
 export default function Index() {
   const {
@@ -19,7 +25,7 @@ export default function Index() {
     formPassword.resetFields();
   };
 
-  const onSave = (values) => {
+  const onSave = (values: PasswordFormType) => {
     const modalConfirm = modal.confirm({
       title: __(locale, "modal_confirm.title"),
       content: __(locale, "modal_confirm.desc"),
@@ -31,19 +37,10 @@ export default function Index() {
         return new Promise((resolve) => {
           router.put(route("password.update"), values, {
             onSuccess: () => {
-              message.destroy();
               message.success(__(locale, "message.success"));
             },
             onError: (errors) => {
-              message.destroy();
-              message.error(__(locale, "message.error"));
-
-              const errorFields = ["current_password", "password"];
-              const errorsArray = errorFields
-                .map((field) => (errors[field] ? { name: field, errors: [errors[field]] } : null))
-                .filter((item) => item !== null);
-              formPassword.setFields(errorsArray);
-              formPassword.scrollToField(errorsArray[0].name, { behavior: "smooth", block: "center" });
+              handleFormErrorMessages(errors, message, formPassword);
             },
             onFinish: resolve,
           });
@@ -62,31 +59,61 @@ export default function Index() {
           email: authUser.email,
         }}
         onFinish={onSave}
+        style={{ maxWidth: "40rem", width: "100%" }}
       >
         <SectionRequired />
 
-        <Form.Item label="Password" name="current_password" rules={[{ required: true }]}>
-          <Input.Password allowClear />
-        </Form.Item>
-
-        <Form.Item label="Password" name="password" rules={[{ required: true }]}>
+        <Form.Item
+          label={__(locale, "lang.current_password")}
+          name="current_password"
+          rules={[
+            {
+              required: true,
+              message: __(locale, "validation.required", {
+                attribute: __(locale, "lang.current_password").toLowerCase(),
+              }),
+            },
+          ]}
+        >
           <Input.Password allowClear />
         </Form.Item>
 
         <Form.Item
-          label="Password confirmation"
+          label={__(locale, "lang.password")}
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: __(locale, "validation.required", { attribute: __(locale, "lang.password").toLowerCase() }),
+            },
+          ]}
+        >
+          <Input.Password allowClear />
+        </Form.Item>
+
+        <Form.Item
+          label={__(locale, "lang.password_confirmation")}
           name="password_confirmation"
           dependencies={["password"]}
           rules={[
             {
               required: true,
+              message: __(locale, "validation.required", {
+                attribute: __(locale, "lang.password_confirmation").toLowerCase(),
+              }),
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();
                 }
-                return Promise.reject(new Error("The new password that you entered do not match!"));
+                return Promise.reject(
+                  new Error(
+                    __(locale, "validation.confirmed", {
+                      attribute: __(locale, "lang.password_confirmation").toLowerCase(),
+                    })
+                  )
+                );
               },
             }),
           ]}

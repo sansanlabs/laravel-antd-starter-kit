@@ -1,5 +1,7 @@
 import AuthLayout from "@/layouts/auth-layout";
-import { Head, Link, router } from "@inertiajs/react";
+import { __, handleFormErrorMessages } from "@/lib/utils";
+import { SharedData } from "@/types";
+import { Link, router, usePage } from "@inertiajs/react";
 import { App, Button, Form, Input, Typography } from "antd";
 import { useState } from "react";
 
@@ -8,6 +10,7 @@ type ForgotPasswordFormType = {
 };
 
 export default function ForgotPassword() {
+  const { locale } = usePage<SharedData>().props;
   const { message, notification } = App.useApp();
 
   const [isProcessing, setIsProcessing] = useState(false);
@@ -23,14 +26,14 @@ export default function ForgotPassword() {
         const { status } = props;
         notification.info({
           placement: "top",
-          message: "Info",
+          message: __(locale, "lang.info"),
           description: status as React.ReactNode,
           duration: 0,
         });
         formForgotPassword.resetFields();
       },
-      onError: () => {
-        message.error("Failed");
+      onError: (errors) => {
+        handleFormErrorMessages(errors, message, formForgotPassword);
       },
       onFinish: () => {
         setIsProcessing(false);
@@ -39,21 +42,36 @@ export default function ForgotPassword() {
   };
 
   return (
-    <AuthLayout title="Forgot password" description="Enter your email to receive a password reset link">
-      <Head title="Forgot password" />
-
+    <AuthLayout
+      title={__(locale, "auth.forgot_password")}
+      titlePage={__(locale, "auth.forgot_password_title_page")}
+      descriptionPage={__(locale, "auth.forgot_password_desc_page")}
+    >
       <Form layout="vertical" form={formForgotPassword} onFinish={onFinish}>
-        <Form.Item label="Email" name="email" rules={[{ required: true }, { type: "email" }]}>
+        <Form.Item
+          label={__(locale, "lang.email")}
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: __(locale, "validation.required", { attribute: __(locale, "lang.email").toLowerCase() }),
+            },
+            {
+              type: "email",
+              message: __(locale, "validation.email", { attribute: __(locale, "lang.email").toLowerCase() }),
+            },
+          ]}
+        >
           <Input allowClear />
         </Form.Item>
 
         <Button block type="primary" htmlType="submit" loading={isProcessing}>
-          Email password reset link
+          {__(locale, "auth.email_password_reset_link")}
         </Button>
       </Form>
 
       <Typography.Paragraph style={{ marginTop: 16, textAlign: "center" }}>
-        Or, return to <Link href={route("login")}>login</Link>
+        {__(locale, "auth.or_return_to")} <Link href={route("login")}>{__(locale, "auth.login")}</Link>
       </Typography.Paragraph>
     </AuthLayout>
   );

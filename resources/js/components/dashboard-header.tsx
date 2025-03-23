@@ -69,15 +69,10 @@ export default function DashboardHeader({
           icon={<LuPanelLeft />}
         />
       </div>
-      <Divider type="vertical" className="!m-0 !h-8" />
+      <Divider type="vertical" style={{ margin: 0, marginTop: 1, height: 32 }} />
 
       {/* <Breadcrumb className="!mb-0.5 hidden md:block" items={items} /> */}
-      <Breadcrumb
-        style={{
-          paddingTop: 5,
-        }}
-        items={items}
-      />
+      <Breadcrumb style={{ paddingTop: 5 }} items={items} />
     </Layout.Header>
   );
 }

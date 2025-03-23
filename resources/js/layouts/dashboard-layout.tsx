@@ -123,7 +123,7 @@ export default function DashboardLayout({ title, submenus, extra, children }: Da
               <Flex gap="small">{extra}</Flex>
             </Flex>
 
-            <Flex className="px-4" gap={16} vertical={mobile} flex={1}>
+            <Flex gap={16} vertical={mobile} flex={1} style={{ paddingInline: 16 }}>
               <DashboardSidebarInnerMenu submenus={submenus} />
 
               <Flex flex={1} vertical gap={16}>

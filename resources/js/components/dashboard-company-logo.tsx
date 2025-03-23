@@ -20,8 +20,8 @@ export default function DashboardCompanyLogo() {
           >
             <Flex flex={1} gap="small" align="center" style={{ minWidth: 0 }}>
               <img src={LogoIpsum} alt="" style={{ height: 32 }} />
-              <Flex vertical flex={1} className="min-w-0">
-                <Typography.Text strong className="text-start">
+              <Flex vertical flex={1}>
+                <Typography.Text strong style={{ textAlign: "start" }}>
                   Lorem Ipsum Inc
                 </Typography.Text>
                 <Typography.Text

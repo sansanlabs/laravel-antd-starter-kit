@@ -1,6 +1,7 @@
 import AuthLayout from "@/layouts/auth-layout";
-import { __ } from "@/lib/utils";
-import { Head, Link, router, usePage } from "@inertiajs/react";
+import { __, handleFormErrorMessages } from "@/lib/utils";
+import { SharedData } from "@/types";
+import { Link, router, usePage } from "@inertiajs/react";
 import { App, Button, Checkbox, Flex, Form, Input, Typography } from "antd";
 import { useState } from "react";
 
@@ -11,10 +12,8 @@ type LoginFormType = {
 };
 
 export default function Login() {
-  const { locale } = usePage().props;
+  const { locale } = usePage<SharedData>().props;
   const { message } = App.useApp();
-
-  console.log(locale);
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [formLogin] = Form.useForm();
@@ -28,13 +27,7 @@ export default function Login() {
         formLogin.resetFields();
       },
       onError: (errors) => {
-        message.error("Failed");
-        const errorFields = ["email", "password"];
-        const errorsArray = errorFields
-          .map((field) => (errors[field] ? { name: field, errors: [errors[field]] } : null))
-          .filter((item) => item !== null);
-        formLogin.setFields(errorsArray);
-        formLogin.scrollToField(errorsArray[0].name, { behavior: "smooth", block: "center" });
+        handleFormErrorMessages(errors, message, formLogin);
       },
       onFinish: () => {
         setIsProcessing(false);
@@ -43,16 +36,24 @@ export default function Login() {
   };
 
   return (
-    <AuthLayout title="Log in to your account" description="Enter your email and password below to log in">
-      <Head title="Log in" />
-
+    <AuthLayout
+      title={__(locale, "auth.login")}
+      titlePage={__(locale, "auth.login_title_page")}
+      descriptionPage={__(locale, "auth.login_desc_page")}
+    >
       <Form layout="vertical" form={formLogin} onFinish={onFinish}>
         <Form.Item
-          label="Email"
+          label={__(locale, "lang.email")}
           name="email"
           rules={[
-            { required: true, message: __(locale, "validation.required", { attribute: "email" }) },
-            { type: "email", message: __(locale, "validation.email", { attribute: "email" }) },
+            {
+              required: true,
+              message: __(locale, "validation.required", { attribute: __(locale, "lang.email").toLowerCase() }),
+            },
+            {
+              type: "email",
+              message: __(locale, "validation.email", { attribute: __(locale, "lang.email").toLowerCase() }),
+            },
           ]}
         >
           <Input allowClear />
@@ -60,29 +61,34 @@ export default function Login() {
         <Form.Item
           label={
             <Flex justify="space-between" align="center" style={{ width: "100%" }}>
-              <span>Password</span>
+              <span>{__(locale, "lang.password")}</span>
               <Link href={route("password.request")} style={{ marginRight: -14, fontWeight: "normal" }}>
-                Forgot password ?
+                {__(locale, "auth.forgot_password")} ?
               </Link>
             </Flex>
           }
           name="password"
-          rules={[{ required: true, message: __(locale, "validation.required", { attribute: "password" }) }]}
+          rules={[
+            {
+              required: true,
+              message: __(locale, "validation.required", { attribute: __(locale, "lang.password").toLowerCase() }),
+            },
+          ]}
         >
           <Input.Password allowClear />
         </Form.Item>
         <Form.Item name="remember" valuePropName="checked">
-          <Checkbox>Remember me</Checkbox>
+          <Checkbox>{__(locale, "lang.remember_me")}</Checkbox>
         </Form.Item>
-        <Flex style={{ marginTop: -10 }}>
-          <Button block type="primary" htmlType="submit" loading={isProcessing}>
-            Login
-          </Button>
-        </Flex>
+
+        <Button block type="primary" htmlType="submit" loading={isProcessing}>
+          {__(locale, "auth.login")}
+        </Button>
       </Form>
 
       <Typography.Paragraph style={{ marginTop: 16, textAlign: "center" }}>
-        Don't have an account? <Link href={route("register")}>Sign up here</Link>
+        {__(locale, "auth.dont_have_an_account")}?{" "}
+        <Link href={route("register")}>{__(locale, "auth.sign_up_here")}</Link>
       </Typography.Paragraph>
     </AuthLayout>
   );

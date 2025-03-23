@@ -1,5 +1,6 @@
 import AuthLayout from "@/layouts/auth-layout";
-import { __ } from "@/lib/utils";
+import { __, handleFormErrorMessages } from "@/lib/utils";
+import { SharedData } from "@/types";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import { App, Button, Form, Input, Typography } from "antd";
 import { useState } from "react";
@@ -11,7 +12,7 @@ type RegisterFormType = {
 };
 
 export default function Register() {
-  const { locale } = usePage().props;
+  const { locale } = usePage<SharedData>().props;
   const { message } = App.useApp();
 
   const [isProcessing, setIsProcessing] = useState(false);
@@ -26,13 +27,7 @@ export default function Register() {
         formRegister.resetFields();
       },
       onError: (errors) => {
-        message.error("Failed");
-        const errorFields = ["email", "password", "password_confirmation"];
-        const errorsArray = errorFields
-          .map((field) => (errors[field] ? { name: field, errors: [errors[field]] } : null))
-          .filter((item) => item !== null);
-        formRegister.setFields(errorsArray);
-        formRegister.scrollToField(errorsArray[0].name, { behavior: "smooth", block: "center" });
+        handleFormErrorMessages(errors, message, formRegister);
       },
       onFinish: () => {
         setIsProcessing(false);
@@ -41,42 +36,64 @@ export default function Register() {
   };
 
   return (
-    <AuthLayout title="Create an account" description="Enter your details below to create your account">
+    <AuthLayout
+      title={__(locale, "auth.register")}
+      titlePage={__(locale, "auth.register_title_page")}
+      descriptionPage={__(locale, "auth.register_desc_page")}
+    >
       <Head title="Register" />
 
       <Form layout="vertical" form={formRegister} onFinish={onFinish}>
         <Form.Item
-          label="Name"
+          label={__(locale, "lang.name")}
           name="name"
-          rules={[{ required: true, message: __(locale, "validation.required", { attribute: "name" }) }]}
-        >
-          <Input allowClear />
-        </Form.Item>
-        <Form.Item
-          label="Email"
-          name="email"
           rules={[
-            { required: true, message: __(locale, "validation.required", { attribute: "email" }) },
-            { type: "email", message: __(locale, "validation.email", { attribute: "email" }) },
+            {
+              required: true,
+              message: __(locale, "validation.required", { attribute: __(locale, "lang.name").toLowerCase() }),
+            },
           ]}
         >
           <Input allowClear />
         </Form.Item>
         <Form.Item
-          label="Password"
+          label={__(locale, "lang.email")}
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: __(locale, "validation.required", { attribute: __(locale, "lang.email").toLowerCase() }),
+            },
+            {
+              type: "email",
+              message: __(locale, "validation.email", { attribute: __(locale, "lang.email").toLowerCase() }),
+            },
+          ]}
+        >
+          <Input allowClear />
+        </Form.Item>
+        <Form.Item
+          label={__(locale, "lang.password")}
           name="password"
-          rules={[{ required: true, message: __(locale, "validation.required", { attribute: "password" }) }]}
+          rules={[
+            {
+              required: true,
+              message: __(locale, "validation.required", { attribute: __(locale, "lang.password").toLowerCase() }),
+            },
+          ]}
         >
           <Input.Password allowClear />
         </Form.Item>
         <Form.Item
-          label="Password confirmation"
+          label={__(locale, "lang.password_confirmation")}
           name="password_confirmation"
           dependencies={["password"]}
           rules={[
             {
               required: true,
-              message: __(locale, "validation.required", { attribute: "password confirmation" }),
+              message: __(locale, "validation.required", {
+                attribute: __(locale, "lang.password_confirmation").toLowerCase(),
+              }),
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
@@ -84,7 +101,11 @@ export default function Register() {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error(__(locale, "validation.confirmed", { attribute: "password confirmation" }))
+                  new Error(
+                    __(locale, "validation.confirmed", {
+                      attribute: __(locale, "lang.password_confirmation").toLowerCase(),
+                    })
+                  )
                 );
               },
             }),
@@ -94,12 +115,12 @@ export default function Register() {
         </Form.Item>
 
         <Button block type="primary" htmlType="submit" loading={isProcessing}>
-          Register
+          {__(locale, "auth.register")}
         </Button>
       </Form>
 
       <Typography.Paragraph style={{ marginTop: 16, textAlign: "center" }}>
-        Already have an account? <Link href={route("login")}>Login here</Link>
+        {__(locale, "auth.already_have_an_account")}? <Link href={route("login")}>{__(locale, "auth.login_here")}</Link>
       </Typography.Paragraph>
     </AuthLayout>
   );

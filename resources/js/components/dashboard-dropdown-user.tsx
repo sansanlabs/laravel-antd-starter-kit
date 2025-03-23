@@ -11,6 +11,7 @@ import {
   LuMonitor,
   LuMoon,
   LuPalette,
+  LuSettings,
   LuSun,
   LuUserRound,
 } from "react-icons/lu";
@@ -43,12 +44,10 @@ export default function DashbordDropdownUser() {
             {},
             {
               onSuccess: () => {
-                message.destroy();
                 message.success(__(locale, "message.success"));
               },
               onError: () => {
-                message.destroy();
-                message.error(__(locale, "message.error"));
+                message.error(__(locale, "message.error_server"));
               },
               onFinish: resolve,
             }
@@ -76,7 +75,7 @@ export default function DashbordDropdownUser() {
         },
         onError: () => {
           message.destroy();
-          message.error(__(locale, "message.error"));
+          message.error(__(locale, "message.error_server"));
         },
       }
     );
@@ -130,13 +129,12 @@ export default function DashbordDropdownUser() {
             {
               key: "settings",
               label: <Link href={route("profile.index")}>{__(locale, "lang.settings")}</Link>,
-              icon: <LuUserRound size={14} />,
+              icon: <LuSettings size={14} />,
             },
             {
               key: "language",
               label: __(locale, "lang.language"),
               icon: <LuLanguages size={14} style={{ marginTop: 4 }} />,
-
               children: [
                 {
                   key: "en",
@@ -191,18 +189,10 @@ export default function DashbordDropdownUser() {
         }}
       >
         <Button type="text" style={{ height: "100%", width: "100%", padding: 8 }}>
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 8,
-            }}
-          >
+          <Flex align="center" justify="space-between" style={{ width: "100%" }} gap="small">
             <Detail />
             <LuChevronsUpDown size={16} />
-          </div>
+          </Flex>
         </Button>
       </Dropdown>
     </div>

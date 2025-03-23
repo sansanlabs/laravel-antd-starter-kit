@@ -1,10 +1,15 @@
 import MenuSetting from "@/components/menu-setting";
 import SectionRequired from "@/components/section-required";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import { __ } from "@/lib/utils";
+import { __, handleFormErrorMessages } from "@/lib/utils";
 import { SharedData } from "@/types";
 import { router, usePage } from "@inertiajs/react";
-import { App, Button, Flex, Form, Input } from "antd";
+import { App, Button, Flex, Form, Input, Typography } from "antd";
+
+type ProfileFormType = {
+  name: string;
+  email: string;
+};
 
 export default function Index() {
   const {
@@ -19,10 +24,18 @@ export default function Index() {
     formProfile.resetFields();
   };
 
-  const onSave = (values) => {
+  const onSave = (values: ProfileFormType) => {
+    const isEmailChange = authUser.email !== values.email;
     const modalConfirm = modal.confirm({
       title: __(locale, "modal_confirm.title"),
-      content: __(locale, "modal_confirm.desc"),
+      content: isEmailChange ? (
+        <>
+          <Typography.Paragraph>{__(locale, "lang.confirm_email_change")}</Typography.Paragraph>
+          <Typography.Paragraph>{__(locale, "modal_confirm.desc")}</Typography.Paragraph>
+        </>
+      ) : (
+        __(locale, "modal_confirm.desc")
+      ),
       cancelButtonProps: { disabled: false },
       onOk: () => {
         modalConfirm.update({
@@ -31,19 +44,10 @@ export default function Index() {
         return new Promise((resolve) => {
           router.put(route("profile.update"), values, {
             onSuccess: () => {
-              message.destroy();
               message.success(__(locale, "message.success"));
             },
             onError: (errors) => {
-              message.destroy();
-              message.error(__(locale, "message.error"));
-
-              const errorFields = ["name", "email"];
-              const errorsArray = errorFields
-                .map((field) => (errors[field] ? { name: field, errors: [errors[field]] } : null))
-                .filter((item) => item !== null);
-              formProfile.setFields(errorsArray);
-              formProfile.scrollToField(errorsArray[0].name, { behavior: "smooth", block: "center" });
+              handleFormErrorMessages(errors, message, formProfile);
             },
             onFinish: resolve,
           });
@@ -62,6 +66,7 @@ export default function Index() {
           email: authUser.email,
         }}
         onFinish={onSave}
+        style={{ maxWidth: "40rem", width: "100%" }}
       >
         <SectionRequired />
 

@@ -1,5 +1,7 @@
 import AuthLayout from "@/layouts/auth-layout";
-import { Head, router } from "@inertiajs/react";
+import { __, handleFormErrorMessages } from "@/lib/utils";
+import { SharedData } from "@/types";
+import { router, usePage } from "@inertiajs/react";
 import { App, Button, Form, Input } from "antd";
 import { useState } from "react";
 
@@ -8,6 +10,7 @@ type ConfirmPasswordFormType = {
 };
 
 export default function ConfirmPassword() {
+  const { locale } = usePage<SharedData>().props;
   const { message } = App.useApp();
 
   const [isProcessing, setIsProcessing] = useState(false);
@@ -19,13 +22,7 @@ export default function ConfirmPassword() {
         setIsProcessing(true);
       },
       onError: (errors) => {
-        message.error("Failed");
-        const errorFields = ["password"];
-        const errorsArray = errorFields
-          .map((field) => (errors[field] ? { name: field, errors: [errors[field]] } : null))
-          .filter((item) => item !== null);
-        formConfirmPassword.setFields(errorsArray);
-        formConfirmPassword.scrollToField(errorsArray[0].name, { behavior: "smooth", block: "center" });
+        handleFormErrorMessages(errors, message, formConfirmPassword);
       },
       onFinish: () => {
         setIsProcessing(false);
@@ -35,18 +32,26 @@ export default function ConfirmPassword() {
 
   return (
     <AuthLayout
-      title="Confirm your password"
-      description="This is a secure area of the application. Please confirm your password before continuing."
+      title={__(locale, "auth.confirm_password")}
+      titlePage={__(locale, "auth.confirm_password_title_page")}
+      descriptionPage={__(locale, "auth.confirm_password_desc_page")}
     >
-      <Head title="Confirm password" />
-
       <Form layout="vertical" form={formConfirmPassword} onFinish={onFinish}>
-        <Form.Item label="Password" name="password" rules={[{ required: true }]}>
+        <Form.Item
+          label={__(locale, "lang.password")}
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: __(locale, "validation.required", { attribute: __(locale, "lang.password").toLowerCase() }),
+            },
+          ]}
+        >
           <Input.Password allowClear />
         </Form.Item>
 
         <Button block type="primary" htmlType="submit" loading={isProcessing}>
-          Confirm password
+          {__(locale, "auth.confirm_password")}
         </Button>
       </Form>
     </AuthLayout>

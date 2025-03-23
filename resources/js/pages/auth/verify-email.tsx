@@ -1,10 +1,13 @@
 import AuthLayout from "@/layouts/auth-layout";
-import { Head, router } from "@inertiajs/react";
+import { __, handleFormErrorMessages } from "@/lib/utils";
+import { SharedData } from "@/types";
+import { router, usePage } from "@inertiajs/react";
 import { App, Button, Form } from "antd";
 import { useState } from "react";
 
-export default function VerifyEmail({ status }: { status?: string }) {
-  const { message, notification } = App.useApp();
+export default function VerifyEmail() {
+  const { locale } = usePage<SharedData>().props;
+  const { modal, message, notification } = App.useApp();
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [formVerifyEmail] = Form.useForm();
@@ -23,15 +26,14 @@ export default function VerifyEmail({ status }: { status?: string }) {
           if (status === "verification-link-sent") {
             notification.info({
               placement: "top",
-              message: "Info",
-              description:
-                "A new verification link has been sent to the email address you provided during registration." as React.ReactNode,
+              message: __(locale, "lang.info"),
+              description: __(locale, "auth.verify_email_status") as React.ReactNode,
               duration: 0,
             });
           }
         },
-        onError: () => {
-          message.error("Failed");
+        onError: (errors) => {
+          handleFormErrorMessages(errors, message, formVerifyEmail);
         },
         onFinish: () => {
           setIsProcessing(false);
@@ -40,25 +42,51 @@ export default function VerifyEmail({ status }: { status?: string }) {
     );
   };
 
+  const onLogout = () => {
+    const modalConfirm = modal.confirm({
+      title: __(locale, "modal_confirm.title"),
+      content: __(locale, "modal_confirm.desc"),
+      okText: __(locale, "auth.logout"),
+      okButtonProps: { danger: true },
+      cancelButtonProps: { disabled: false },
+      onOk: () => {
+        modalConfirm.update({
+          cancelButtonProps: { disabled: true },
+        });
+
+        return new Promise((resolve) => {
+          router.post(
+            route("logout"),
+            {},
+            {
+              onSuccess: () => {
+                message.success(__(locale, "message.success"));
+              },
+              onError: () => {
+                message.error(__(locale, "message.error_server"));
+              },
+              onFinish: resolve,
+            }
+          );
+        });
+      },
+    });
+  };
+
   return (
     <AuthLayout
-      title="Verify email"
-      description="Please verify your email address by clicking on the link we just emailed to you."
+      title={__(locale, "auth.verify_email")}
+      titlePage={__(locale, "auth.verify_email_title_page")}
+      descriptionPage={__(locale, "auth.verify_email_desc_page")}
     >
-      <Head title="Email verification" />
-
-      {status === "verification-link-sent" && (
-        <div className="mb-4 text-center text-sm font-medium text-green-600"></div>
-      )}
-
       <Form layout="vertical" form={formVerifyEmail} onFinish={onFinish}>
         <Button block type="primary" htmlType="submit" loading={isProcessing}>
-          Resend verification email
+          {__(locale, "auth.resend_verification_email")}
         </Button>
       </Form>
 
-      <Button type="link" style={{ marginTop: 8 }} onClick={() => router.post(route("logout"))}>
-        Logout
+      <Button type="link" style={{ marginBlock: 8 }} onClick={onLogout}>
+        {__(locale, "auth.logout")}
       </Button>
     </AuthLayout>
   );
