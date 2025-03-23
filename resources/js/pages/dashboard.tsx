@@ -21,7 +21,7 @@ export default function Dashboard() {
         }}
       >
         <Row gutter={[16, 16]}>
-          <Col span={6}>
+          <Col xs={24} md={12} lg={6}>
             <Card>
               <Statistic
                 title={__(locale, "lang.total_employees")}
@@ -38,7 +38,7 @@ export default function Dashboard() {
               />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col xs={24} md={12} lg={6}>
             <Card>
               <Statistic
                 title={__(locale, "lang.employees_in_office")}
@@ -55,7 +55,7 @@ export default function Dashboard() {
               />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col xs={24} md={12} lg={6}>
             <Card>
               <Statistic
                 title={__(locale, "lang.employees_on_leave")}
@@ -72,7 +72,7 @@ export default function Dashboard() {
               />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col xs={24} md={12} lg={6}>
             <Card>
               <Statistic
                 title={__(locale, "lang.employees_on_business_trip")}

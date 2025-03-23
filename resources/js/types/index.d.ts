@@ -25,6 +25,7 @@ export interface SharedData {
   // custom
   activeMenu: string;
   activeMenuContent: string;
+  breadcrumb: { title: string; url?: string }[];
 }
 
 export interface User {

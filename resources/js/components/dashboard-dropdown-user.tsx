@@ -2,7 +2,7 @@ import useLocale from "@/hooks/use-locale";
 import { __ } from "@/lib/utils";
 import { SharedData } from "@/types";
 import { Link, router, usePage } from "@inertiajs/react";
-import { App, Avatar, Button, ConfigProvider, Dropdown, Flex } from "antd";
+import { App, Avatar, Button, Dropdown, Flex } from "antd";
 import { ThemeMode, useThemeMode } from "antd-style";
 import {
   LuChevronsUpDown,
@@ -83,32 +83,23 @@ export default function DashbordDropdownUser() {
 
   const Detail = () => {
     return (
-      <ConfigProvider
-        theme={{
-          token: {
-            lineHeight: 0,
-          },
-        }}
-      >
-        <Flex flex={1} gap="small" align="center" style={{ minWidth: 0 }}>
-          <Avatar shape="square" icon={<LuUserRound size={20} />} />
-          <Flex vertical flex={1} style={{ minWidth: 0 }}>
-            <span style={{ textAlign: "start", fontSize: 14, fontWeight: 600 }}>{authUser.name}</span>
-            <span
-              style={{
-                marginTop: -4,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                textAlign: "start",
-                fontSize: 12,
-              }}
-            >
-              {authUser.email}
-            </span>
-          </Flex>
+      <Flex flex={1} gap="small" align="center" style={{ minWidth: 0 }}>
+        <Avatar shape="square" icon={<LuUserRound size={20} />} />
+        <Flex vertical flex={1} style={{ minWidth: 0 }}>
+          <span style={{ textAlign: "start", fontSize: 14, fontWeight: 600 }}>{authUser.name}</span>
+          <span
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              textAlign: "start",
+              fontSize: 12,
+            }}
+          >
+            {authUser.email}
+          </span>
         </Flex>
-      </ConfigProvider>
+      </Flex>
     );
   };
 

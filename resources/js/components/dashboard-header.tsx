@@ -1,6 +1,9 @@
+import { __ } from "@/lib/utils";
+import { SharedData } from "@/types";
+import { Link, usePage } from "@inertiajs/react";
 import { Breadcrumb, Button, Divider, Layout } from "antd";
 import { useResponsive, useTheme } from "antd-style";
-import { LuHouse, LuPanelLeft, LuUserRound } from "react-icons/lu";
+import { LuEllipsis, LuHouse, LuPanelLeft } from "react-icons/lu";
 
 type DashboardHeaderType = {
   isSidebarDrawerOpen: boolean;
@@ -15,27 +18,52 @@ export default function DashboardHeader({
   isSidebarPanelCollapsed,
   setIsSidebarPanelCollapsed,
 }: DashboardHeaderType) {
+  const { locale, breadcrumb = [] } = usePage<SharedData>().props;
   const { colorBorder } = useTheme();
   const { mobile } = useResponsive();
 
+  const lastBreadcrumb = breadcrumb.at(-1);
+
   const items = [
-    {
-      href: "",
-      title: <LuHouse style={{ marginTop: 4 }} />,
-    },
-    {
-      href: "",
+    !mobile && {
+      key: "home",
       title: (
-        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <LuUserRound />
-          <span>Application List</span>
-        </div>
+        <Link href={route("dashboard.index")}>
+          <LuHouse style={{ marginTop: 4 }} />
+        </Link>
       ),
     },
-    {
-      title: "Application",
+    ...(mobile
+      ? [
+          {
+            key: "ellipsis",
+            title: <LuEllipsis style={{ marginTop: 4 }} />,
+            menu: {
+              items: [
+                {
+                  key: "dashboard",
+                  title: <Link href={route("dashboard.index")}>{__(locale, "lang.dashboard")}</Link>,
+                },
+                ...breadcrumb.slice(0, -1).map((item, index) => ({
+                  key: `breadcrumb-${index}`,
+                  title: item.url ? <Link href={item.url}>{item.title}</Link> : item.title,
+                })),
+              ],
+            },
+          },
+        ]
+      : []),
+    ...(!mobile
+      ? breadcrumb.slice(0, -1).map((item, index) => ({
+          key: `breadcrumb-${index}`,
+          title: item.url ? <Link href={item.url}>{item.title}</Link> : item.title,
+        }))
+      : []),
+    lastBreadcrumb && {
+      key: "last",
+      title: lastBreadcrumb.title ?? "",
     },
-  ];
+  ].filter(Boolean);
 
   return (
     <Layout.Header

@@ -11,6 +11,15 @@ class ProfileController extends Controller {
   public function index(): Response {
     inertia()->share([
       "activeMenuContent" => "profile",
+      "breadcrumb" => [
+        [
+          "title" => __("lang.settings"),
+          "url" => route("profile.index"),
+        ],
+        [
+          "title" => __("lang.profile"),
+        ],
+      ],
     ]);
     return inertia("dashboard/settings/profile/index");
   }

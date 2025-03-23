@@ -13,6 +13,15 @@ class PasswordController extends Controller {
   public function index(): Response {
     inertia()->share([
       "activeMenuContent" => "password",
+      "breadcrumb" => [
+        [
+          "title" => __("lang.settings"),
+          "url" => route("profile.index"),
+        ],
+        [
+          "title" => __("lang.password"),
+        ],
+      ],
     ]);
     return inertia("dashboard/settings/password/index");
   }
