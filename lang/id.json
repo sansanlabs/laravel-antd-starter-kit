@@ -30,6 +30,9 @@
   "lang.confirm_email_change": "Anda akan mengubah alamat email Anda. Kami akan mengirimkan email verifikasi untuk mengonfirmasi email baru Anda.",
   "lang.copyright": "Hak Cipta",
   "lang.all_rights_reserved": "Seluruh hak cipta dilindungi",
+  "lang.warning": "Peringatan",
+  "lang.delete_account": "Hapus akun",
+  "lang.delete_account_desc": "Menghapus akun Anda akan menghapus semua data Anda dari sistem kami. Tindakan ini tidak dapat dibatalkan. Harap berhati-hati",
 
   "auth.login": "Masuk",
   "auth.login_title_page": "Masuk ke akun Anda",

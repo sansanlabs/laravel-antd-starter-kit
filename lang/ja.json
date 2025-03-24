@@ -30,6 +30,9 @@
   "lang.confirm_email_change": "メールアドレスを変更しようとしています。新しいメールアドレスを確認するための確認メールを送信します。",
   "lang.copyright": "著作権",
   "lang.all_rights_reserved": "全著作権所有",
+  "lang.warning": "警告",
+  "lang.delete_account": "アカウントを削除",
+  "lang.delete_account_desc": "アカウントを削除すると、すべてのデータがシステムから削除されます。この操作は元に戻せません。慎重に進めてください。",
 
   "auth.login": "ログイン",
   "auth.login_title_page": "アカウントにログイン",
