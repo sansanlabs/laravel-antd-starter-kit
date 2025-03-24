@@ -28,6 +28,8 @@
   "lang.reset": "Reset",
   "lang.menu": "Menu",
   "lang.confirm_email_change": "You are about to change your email address. We will send a verification email to confirm your new email",
+  "lang.copyright": "Copyright",
+  "lang.all_rights_reserved": "All rights reserved",
 
   "auth.login": "Login",
   "auth.login_title_page": "Login to your account",
