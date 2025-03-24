@@ -12,6 +12,10 @@ type ProfileFormType = {
   email: string;
 };
 
+type DeleteAccountFormType = {
+  password: string;
+};
+
 export default function Index() {
   const {
     locale,
@@ -60,7 +64,7 @@ export default function Index() {
     });
   };
 
-  const onDelete = () => {
+  const onDelete = (values: DeleteAccountFormType) => {
     const modalConfirm = modal.confirm({
       title: __(locale, "modal_confirm.title"),
       content: __(locale, "modal_confirm.desc"),
@@ -70,7 +74,7 @@ export default function Index() {
           cancelButtonProps: { disabled: true },
         });
         return new Promise((resolve) => {
-          router.delete(route("profile.destroy"), {
+          router.delete(route("profile.destroy", { password: values.password }), {
             onSuccess: () => {
               message.success(__(locale, "message.success"));
             },
