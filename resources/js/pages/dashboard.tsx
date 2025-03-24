@@ -3,7 +3,7 @@ import { __ } from "@/lib/utils";
 import { SharedData } from "@/types";
 import { usePage } from "@inertiajs/react";
 import { Card, Col, ConfigProvider, Row, Statistic, Table, theme } from "antd";
-import { LuBriefcaseBusiness, LuCalendarX, LuGlobe, LuPlane, LuUsersRound } from "react-icons/lu";
+import { LuBriefcaseBusiness, LuCalendarX, LuPlane, LuUsersRound } from "react-icons/lu";
 
 export default function Dashboard() {
   const { locale } = usePage<SharedData>().props;
