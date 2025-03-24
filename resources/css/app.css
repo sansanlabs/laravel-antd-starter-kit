@@ -60,3 +60,8 @@
   scrollbar-width: auto !important;
   scrollbar-color: auto !important;
 }
+
+/* antd message */
+.ant-message-notice-content {
+  border: 1px solid var(--ant-color-border) !important;
+}
