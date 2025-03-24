@@ -41,9 +41,30 @@ class ProfileController extends Controller {
 
       $request->user()->save();
 
-      return back();
+      return to_route("profile.index");
     } catch (\Throwable $th) {
-      throw $th;
+      handleTrowable($th);
+    }
+  }
+
+  public function destroy(Request $request): RedirectResponse {
+    $request->validate([
+      "password" => ["required", "current_password"],
+    ]);
+
+    try {
+      $user = $request->user();
+
+      auth()->logout();
+
+      $user->delete();
+
+      $request->session()->invalidate();
+      $request->session()->regenerateToken();
+
+      return to_route("home");
+    } catch (\Throwable $th) {
+      handleTrowable($th);
     }
   }
 }
