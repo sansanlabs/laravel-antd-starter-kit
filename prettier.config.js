@@ -1,5 +1,10 @@
 export default {
-  plugins: ["@prettier/plugin-php", "@shufo/prettier-plugin-blade", "@trivago/prettier-plugin-sort-imports"],
+  plugins: [
+    "@prettier/plugin-php",
+    "@shufo/prettier-plugin-blade",
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss",
+  ],
   phpVersion: "8.3",
   trailingComma: "es5",
   tabWidth: 2,

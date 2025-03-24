@@ -1,13 +1,8 @@
-body {
-  margin: 0;
-  padding: 0;
-}
+@layer theme, base, antd, components, utilities;
 
-.antialiased {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
 /* antd button */
 .ant-btn-color-primary {
   box-shadow: none !important;
