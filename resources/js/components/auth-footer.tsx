@@ -1,3 +1,4 @@
+import { __ } from "@/lib/utils";
 import { SharedData } from "@/types";
 import { usePage } from "@inertiajs/react";
 import { ConfigProvider, Layout, Typography } from "antd";
@@ -5,7 +6,7 @@ import { useTheme } from "antd-style";
 import { useEffect, useState } from "react";
 
 export default function AuthFooter() {
-  const { appName } = usePage<SharedData>().props;
+  const { companyName, appName, locale } = usePage<SharedData>().props;
   const { colorBorder } = useTheme();
   const [year, setYear] = useState(new Date().getFullYear());
 
@@ -37,9 +38,9 @@ export default function AuthFooter() {
             fontSize: 12,
           }}
         >
-          &copy; Copyright {year} {appName}.
+          &copy; {__(locale, "lang.copyright")} {year} {appName}.
           <br />
-          Lorem Ipsum Inc. All rights reserved.
+          {companyName}. {__(locale, "lang.all_rights_reserved")}.
           <br />
         </Typography.Paragraph>
       </Layout.Footer>

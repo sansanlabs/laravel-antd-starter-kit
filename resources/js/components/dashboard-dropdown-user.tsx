@@ -64,7 +64,7 @@ export default function DashbordDropdownUser() {
       {
         onStart: () => {
           message.destroy();
-          message.loading(__(locale, "message.processing"));
+          message.loading(__(locale, "message.processing"), 0);
         },
         onSuccess: ({ props }) => {
           const { locale } = props as unknown as SharedData;

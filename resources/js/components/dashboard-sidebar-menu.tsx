@@ -2,7 +2,7 @@ import { __, findParentPath } from "@/lib/utils";
 import { MenuItem, SharedData } from "@/types";
 import { Link, usePage } from "@inertiajs/react";
 import { ConfigProvider, Menu, MenuProps, theme } from "antd";
-import { LuChartPie, LuFileInput, LuFileOutput, LuGroup, LuMenu, LuMinus, LuPlus } from "react-icons/lu";
+import { LuChartPie, LuMenu, LuMinus, LuPlus } from "react-icons/lu";
 
 type DashboardSidebarMenuType = {
   isSidebarPanelCollapsed: boolean;
@@ -18,38 +18,6 @@ export default function DashboardSidebarMenu({ isSidebarPanelCollapsed }: Dashbo
       key: "dashboard",
       label: <Link href={route("dashboard.index")}>{__(locale, "lang.dashboard")}</Link>,
       icon: <LuChartPie size={16} />,
-    },
-    {
-      key: "forms",
-      label: "Forms",
-      icon: <LuGroup size={16} />,
-    },
-    {
-      key: "components",
-      label: "Components",
-      icon: <LuFileInput size={16} />,
-    },
-    {
-      key: "errors",
-      label: "Errors",
-      icon: <LuFileOutput size={16} />,
-      children: [
-        {
-          key: "403",
-          label: "Error 404",
-          icon: <LuFileOutput size={16} />,
-        },
-        {
-          key: "404",
-          label: "Error 404",
-          icon: <LuFileOutput size={16} />,
-        },
-        {
-          key: "500",
-          label: "Error 500",
-          icon: <LuFileOutput size={16} />,
-        },
-      ],
     },
     {
       key: "menu",

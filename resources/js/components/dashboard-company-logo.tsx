@@ -5,7 +5,7 @@ import { Button, ConfigProvider, Flex, Typography } from "antd";
 import LogoIpsum from "../../../public/assets/images/logo-ipsum.svg";
 
 export default function DashboardCompanyLogo() {
-  const { appName } = usePage<SharedData>().props;
+  const { companyName, appName } = usePage<SharedData>().props;
 
   return (
     <div style={{ margin: 8, height: 50 }}>
@@ -22,7 +22,7 @@ export default function DashboardCompanyLogo() {
               <img src={LogoIpsum} alt="" style={{ height: 32 }} />
               <Flex vertical flex={1}>
                 <Typography.Text strong style={{ textAlign: "start" }}>
-                  Lorem Ipsum Inc
+                  {companyName}
                 </Typography.Text>
                 <Typography.Text
                   style={{
