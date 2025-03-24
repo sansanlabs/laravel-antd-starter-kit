@@ -32,7 +32,12 @@ export default function Welcome() {
       logoUrl: "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg",
     },
     {
-      name: "Inertia.js",
+      name: "Tailwind",
+      url: "https://tailwindcss.com/",
+      logoUrl: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg",
+    },
+    {
+      name: "Inertia",
       url: "https://inertiajs.com/",
       logoUrl: "https://avatars.githubusercontent.com/u/47703742?s=200&v=4",
     },
@@ -133,9 +138,9 @@ export default function Welcome() {
               Laravel Antd Starter Kit
             </Typography.Title>
 
-            <Typography.Paragraph style={{ fontSize: 20 }}>
-              A Laravel starter kit with Ant Design, Inertia.js, React, <br /> and TypeScript optimized for modern web
-              development.
+            <Typography.Paragraph style={{ fontSize: 20, textAlign: "center" }}>
+              A Laravel starter kit with Ant Design, Tailwind, Inertia, React, <br /> and TypeScript optimized for
+              modern web development.
             </Typography.Paragraph>
 
             <Flex gap={16}>

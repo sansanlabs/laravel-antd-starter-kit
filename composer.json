@@ -2,11 +2,12 @@
   "$schema": "https://getcomposer.org/schema.json",
   "name": "sansanlabs/laravel-antd-starter-kit",
   "type": "project",
-  "description": "A Laravel starter kit with Ant Design, Inertia.js, React, and TypeScript optimized for modern web development.",
+  "description": "A Laravel starter kit with Ant Design, Tailwind, Inertia, React, and TypeScript optimized for modern web development.",
   "keywords": [
     "laravel",
     "framework",
     "antd",
+    "tailwind",
     "inertia",
     "react",
     "typescript",
