@@ -5,8 +5,8 @@
     "build": "vite build",
     "build:ssr": "vite build && vite build --ssr",
     "dev": "vite",
-    "format": "prettier --write resources/ app/ config/ database/ test/",
-    "format:check": "prettier --check resources/ app/ config/ database/ test/",
+    "format": "prettier --write resources/ app/ config/ database/ tests/",
+    "format:check": "prettier --check resources/ app/ config/ database/ tests/",
     "lint": "eslint . --fix",
     "types": "tsc --noEmit"
   },
