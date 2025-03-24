@@ -16,6 +16,7 @@ export interface MenuItem {
 
 export interface SharedData {
   // default from handle inertia
+  companyName: string;
   appName: string;
   locale: string;
   quote: { message: string; author: string };

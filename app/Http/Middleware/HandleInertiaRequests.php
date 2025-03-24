@@ -39,6 +39,7 @@ class HandleInertiaRequests extends Middleware {
 
     return [
       ...parent::share($request),
+      "companyName" => "Lorem Ipsum Inc",
       "appName" => config("app.name"),
       "locale" => $locale,
       "quote" => [
