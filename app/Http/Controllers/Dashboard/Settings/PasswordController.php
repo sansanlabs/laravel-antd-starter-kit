@@ -36,6 +36,6 @@ class PasswordController extends Controller {
       "password" => Hash::make($validatedData["password"]),
     ]);
 
-    return back();
+    return to_route("password.index");
   }
 }
