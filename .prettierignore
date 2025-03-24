@@ -1,2 +1,3 @@
 /resources/views/vendor/notifications/email.blade.php
+/resources/js/ssr.tsx
 /routes/*
