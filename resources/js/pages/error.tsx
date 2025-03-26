@@ -1,4 +1,4 @@
-import { Button, Result } from "antd";
+import { Button, Flex, Result } from "antd";
 
 type ErrorType = {
   status: number;
@@ -20,7 +20,7 @@ export default function Error({ status }: ErrorType) {
   }[status];
 
   return (
-    <div className="flex min-h-dvh items-center justify-center">
+    <Flex align="center" justify="center" style={{ minHeight: "100dvh" }}>
       <Result
         status={status === 403 ? 403 : status === 404 ? 404 : 500}
         title={title}
@@ -31,6 +31,6 @@ export default function Error({ status }: ErrorType) {
           </a>
         }
       />
-    </div>
+    </Flex>
   );
 }
