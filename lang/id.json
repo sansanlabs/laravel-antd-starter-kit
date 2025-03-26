@@ -1,4 +1,5 @@
 {
+  "message.refreshing": "Menyegarkan . . .",
   "message.processing": "Memproses . . .",
   "message.success": "Berhasil",
   "message.error_server": "Terjadi kesalahan internal, silakan coba lagi nanti",

@@ -1,9 +1,11 @@
 import { __ } from "@/lib/utils";
 import { SharedData } from "@/types";
 import { Link, usePage } from "@inertiajs/react";
-import { Breadcrumb, Button, Divider, Layout } from "antd";
+import { Breadcrumb, Button, Divider, Flex, Layout } from "antd";
 import { useResponsive, useTheme } from "antd-style";
 import { LuEllipsis, LuHouse, LuPanelLeft } from "react-icons/lu";
+
+import ButtonRefresh from "./button-refresh";
 
 type DashboardHeaderType = {
   isSidebarDrawerOpen: boolean;
@@ -78,13 +80,7 @@ export default function DashboardHeader({
         zIndex: 20,
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-        }}
-      >
+      <Flex align="center" gap={8}>
         <Button
           onClick={() => {
             if (mobile) {
@@ -96,7 +92,9 @@ export default function DashboardHeader({
           }}
           icon={<LuPanelLeft />}
         />
-      </div>
+
+        <ButtonRefresh />
+      </Flex>
       <Divider type="vertical" style={{ margin: 0, marginTop: 1, height: 32 }} />
 
       {/* <Breadcrumb className="!mb-0.5 hidden md:block" items={items} /> */}

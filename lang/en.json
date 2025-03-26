@@ -1,4 +1,5 @@
 {
+  "message.refreshing": "Refreshing . . .",
   "message.processing": "Processing . . .",
   "message.success": "Success",
   "message.error_server": "Internal server error, please try again later",
