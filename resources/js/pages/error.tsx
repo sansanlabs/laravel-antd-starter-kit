@@ -1,36 +1,68 @@
-import { Button, Flex, Result } from "antd";
+import DashboardLayout from "@/layouts/dashboard-layout";
+import { __ } from "@/lib/utils";
+import { SharedData } from "@/types";
+import { Head, usePage } from "@inertiajs/react";
+import { Button, Flex, Layout, Result } from "antd";
 
 type ErrorType = {
   status: number;
 };
 
 export default function Error({ status }: ErrorType) {
+  const {
+    auth: { user: authUser },
+    locale,
+  } = usePage<SharedData>().props;
+
   const title = {
-    503: "503: Service Unavailable",
-    500: "500: Server Error",
-    404: "404: Page Not Found",
-    403: "403: Forbidden",
+    500: __(locale, "error_500_title"),
+    503: __(locale, "error_503_title"),
+    403: __(locale, "error_403_title"),
+    404: __(locale, "error_404_title"),
   }[status];
 
   const description = {
-    503: "Sorry, we are doing some maintenance. Please check back soon.",
-    500: "Whoops, something went wrong on our servers.",
-    404: "Sorry, the page you are looking for could not be found.",
-    403: "Sorry, you are forbidden from accessing this page.",
+    500: __(locale, "error_500_desc"),
+    503: __(locale, "error_503_desc"),
+    403: __(locale, "error_403_desc"),
+    404: __(locale, "error_404_desc"),
   }[status];
 
-  return (
-    <Flex align="center" justify="center" style={{ minHeight: "100dvh" }}>
+  const ErrorContent = () => (
+    <Flex flex={1} justify="center" align="center">
       <Result
         status={status === 403 ? 403 : status === 404 ? 404 : 500}
         title={title}
         subTitle={description}
         extra={
-          <a href="/">
-            <Button type="primary">Back to home</Button>
-          </a>
+          <Flex vertical gap={8}>
+            <a href={authUser ? route("dashboard.index") : "/"}>
+              <Button type="primary">{__(locale, "lang.back_to_home")}</Button>
+            </a>
+
+            {status === 403 && !authUser && (
+              <a href={route("microsoft.redirect")}>
+                <Button type="dashed">{__(locale, "lang.login_with_a_different_account")}</Button>
+              </a>
+            )}
+          </Flex>
         }
       />
     </Flex>
+  );
+
+  if (status === 403 && authUser) {
+    return (
+      <DashboardLayout title={title ?? ""}>
+        <ErrorContent />
+      </DashboardLayout>
+    );
+  }
+
+  return (
+    <Layout style={{ minHeight: "100dvh" }}>
+      <Head title={title} />
+      <ErrorContent />
+    </Layout>
   );
 }

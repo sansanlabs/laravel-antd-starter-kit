@@ -3,12 +3,16 @@
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\Localization;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -21,10 +25,39 @@ return Application::configure(basePath: dirname(__DIR__))
   ->withExceptions(function (Exceptions $exceptions) {
     $exceptions->respond(function (Response $response, Throwable $exception, Request $request): RedirectResponse|Response {
       if (app()->environment(["production"]) && in_array($response->getStatusCode(), [500, 503, 404, 403])) {
-        return inertia("error", ["status" => $response->getStatusCode()])
+        if (!$request->hasSession()) {
+          $middlewares = [
+            app(EncryptCookies::class),
+            app(AddQueuedCookiesToResponse::class),
+            app(StartSession::class),
+            app(ShareErrorsFromSession::class),
+            app(HandleInertiaRequests::class),
+          ];
+
+          $responseHandler = function ($request) use ($response) {
+            return inertia("error", [
+              "status" => $response->getStatusCode(),
+            ])
+              ->toResponse($request)
+              ->setStatusCode($response->getStatusCode());
+          };
+
+          foreach (array_reverse($middlewares) as $middleware) {
+            $next = $responseHandler;
+            $responseHandler = fn($req) => $middleware->handle($req, $next);
+          }
+
+          return $responseHandler($request);
+        }
+
+        return inertia("error", [
+          "status" => $response->getStatusCode(),
+        ])
           ->toResponse($request)
           ->setStatusCode($response->getStatusCode());
-      } elseif ($response->getStatusCode() === 419) {
+      }
+
+      if ($response->getStatusCode() === 419) {
         return back()->with([
           "message" => "The page expired, please try again.",
         ]);
