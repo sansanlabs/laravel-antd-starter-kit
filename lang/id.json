@@ -34,6 +34,17 @@
   "lang.warning": "Peringatan",
   "lang.delete_account": "Hapus akun",
   "lang.delete_account_desc": "Menghapus akun Anda akan menghapus semua data Anda dari sistem kami. Tindakan ini tidak dapat dibatalkan. Harap berhati-hati",
+  "lang.login_with_a_different_account": "Masuk dengan akun yang berbeda",
+  "lang.back_to_home": "Kembali ke beranda",
+
+  "error_500_title": "500: Kesalahan Server",
+  "error_500_desc": "Waduh, ada yang salah di server kami.",
+  "error_503_title": "503: Layanan Tidak Tersedia",
+  "error_503_desc": "Maaf, kami sedang melakukan pemeliharaan. Silakan coba lagi nanti.",
+  "error_403_title": "403: Akses Dilarang",
+  "error_403_desc": "Maaf, Anda tidak diizinkan mengakses halaman ini.",
+  "error_404_title": "404: Halaman Tidak Ditemukan",
+  "error_404_desc": "Maaf, halaman yang Anda cari tidak ditemukan.",
 
   "auth.login": "Masuk",
   "auth.login_title_page": "Masuk ke akun Anda",

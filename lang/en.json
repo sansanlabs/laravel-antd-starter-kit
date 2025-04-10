@@ -34,6 +34,17 @@
   "lang.warning": "Warning",
   "lang.delete_account": "Delete account",
   "lang.delete_account_desc": "Deleting your account will remove all your data from our system. This action cannot be undone. Please proceed with caution.",
+  "lang.login_with_a_different_account": "Login with a different account",
+  "lang.back_to_home": "Back to home",
+
+  "error_500_title": "500: Server Error",
+  "error_500_desc": "Whoops, something went wrong on our servers.",
+  "error_503_title": "503: Service Unavailable",
+  "error_503_desc": "Sorry, we are doing some maintenance. Please check back soon.",
+  "error_403_title": "403: Forbidden",
+  "error_403_desc": "Sorry, you are forbidden from accessing this page.",
+  "error_404_title": "404: Page Not Found",
+  "error_404_desc": "Sorry, the page you are looking for could not be found.",
 
   "auth.login": "Login",
   "auth.login_title_page": "Login to your account",

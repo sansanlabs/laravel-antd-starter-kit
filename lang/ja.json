@@ -34,6 +34,17 @@
   "lang.warning": "警告",
   "lang.delete_account": "アカウントを削除",
   "lang.delete_account_desc": "アカウントを削除すると、すべてのデータがシステムから削除されます。この操作は元に戻せません。慎重に進めてください。",
+  "lang.login_with_a_different_account": "別のアカウントでログインする",
+  "lang.back_to_home": "ホームに戻る",
+
+  "error_500_title": "500：サーバーエラー",
+  "error_500_desc": "おっと、サーバーで問題が発生しました。",
+  "error_503_title": "503：サービス利用不可",
+  "error_503_desc": "申し訳ありません。メンテナンス中です。しばらくしてから再度お試しください。",
+  "error_403_title": "403：アクセス禁止",
+  "error_403_desc": "申し訳ありませんが、このページへのアクセスは禁止されています。",
+  "error_404_title": "404：ページが見つかりません",
+  "error_404_desc": "申し訳ありません。お探しのページが見つかりませんでした。",
 
   "auth.login": "ログイン",
   "auth.login_title_page": "アカウントにログイン",
