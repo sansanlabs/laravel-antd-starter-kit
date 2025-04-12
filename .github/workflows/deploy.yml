@@ -1,40 +1,40 @@
 name: 🚀 Deploy
+
 on:
   push:
     branches:
+      - develop
       - main
-      - development
+  pull_request:
+    branches:
+      - develop
+      - main
+
 jobs:
-  web-deploy:
+  deploy:
     name: 🚀 Deploy on CPanel via FTP
     runs-on: ubuntu-latest
     steps:
-      - name: 🚚 Get Latest Code
+      - name: 🚚 Checkout
         uses: actions/checkout@v4
 
-      - name: ⚙️ Use PHP 8.4
+      - name: ⚙️ Setup PHP
         uses: shivammathur/setup-php@main
         with:
           php-version: "8.4"
 
-      - name: ⚙️ Use NodeJS 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
+      - name: 🔨 Install Dependencies
+        run: |
+          composer install
+          npm install
 
-      - name: 🔨 Install Dependencies PHP
-        run: composer install
-
-      - name: 🔨 Install Dependencies JS
-        run: npm install
-
-      - name: 🗄️ Copy .env
+      - name: 🗄️ Copy Environment File
         run: cp .env.example .env
 
       - name: 🗑️ Delete Build Folder
         run: rm -rf public/build && rm -rf bootstrap/ssr
 
-      - name: 🔨 Build Frontend (Inertia + React)
+      - name: 🔨 Build Frontend
         run: npm run build
 
       - name: 📂 Sync Files

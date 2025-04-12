@@ -1,4 +1,4 @@
-name: tests
+name: 🧪 Tests
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
       - main
 
 jobs:
-  ci:
+  tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,19 +25,13 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Install Node Dependencies
-        run: npm i
+      - name: Install Dependencies
+        run: |
+          composer install --no-interaction --prefer-dist --optimize-autoloader
+          npm i
 
       - name: Build Assets
         run: npm run build
-
-      - name: Install Dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Copy Environment File
         run: cp .env.example .env
