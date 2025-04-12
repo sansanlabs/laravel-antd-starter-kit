@@ -1,0 +1,52 @@
+name: 🚀 Deploy
+on:
+  push:
+    branches:
+      - main
+      - development
+jobs:
+  web-deploy:
+    name: 🚀 Deploy on CPanel via FTP
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get Latest Code
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Use PHP 8.4
+        uses: shivammathur/setup-php@main
+        with:
+          php-version: "8.4"
+
+      - name: ⚙️ Use NodeJS 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 🔨 Install Dependencies PHP
+        run: composer install
+
+      - name: 🔨 Install Dependencies JS
+        run: npm install
+
+      - name: 🗄️ Copy .env
+        run: cp .env.example-ts .env
+
+      - name: 🗑️ Delete Build Folder
+        run: rm -rf public/build && rm -rf bootstrap/ssr
+
+      - name: 🔨 Build Frontend (Inertia + React)
+        run: npm run build
+
+      - name: 📂 Sync Files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ github.ref == 'refs/heads/main' && secrets.PROD_FTP_SERVER || secrets.DEV_FTP_SERVER }}
+          username: ${{ github.ref == 'refs/heads/main' && secrets.PROD_FTP_USERNAME || secrets.DEV_FTP_USERNAME }}
+          password: ${{ github.ref == 'refs/heads/main' && secrets.PROD_FTP_PASSWORD || secrets.DEV_FTP_PASSWORD }}
+          server-dir: /website/
+          exclude: |
+            .env
+            .git/**
+            node_modules/**
+            vendor/**
+          timeout: 120000
