@@ -29,7 +29,7 @@ jobs:
         run: npm install
 
       - name: 🗄️ Copy .env
-        run: cp .env.example-ts .env
+        run: cp .env.example .env
 
       - name: 🗑️ Delete Build Folder
         run: rm -rf public/build && rm -rf bootstrap/ssr
