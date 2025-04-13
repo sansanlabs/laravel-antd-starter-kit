@@ -12,7 +12,6 @@ on:
 
 jobs:
   deploy:
-    name: 🚀 Deploy on CPanel via FTP
     runs-on: ubuntu-latest
     steps:
       - name: 🚚 Checkout
