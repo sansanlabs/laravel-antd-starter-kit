@@ -19,6 +19,7 @@
     "php": "^8.2",
     "inertiajs/inertia-laravel": "^2.0.2",
     "laravel/framework": "^12.9.2",
+    "laravel/telescope": "^5.7",
     "laravel/tinker": "^2.10.1",
     "sansanlabs/laravel-userstamps": "^4.1",
     "spatie/laravel-activitylog": "^4.10.1",
