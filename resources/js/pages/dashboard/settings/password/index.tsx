@@ -1,4 +1,4 @@
-import MenuSetting from "@/components/menu-setting";
+import InnerSidebarMenuUser from "@/components/inner-sidebar-menu-setting";
 import SectionRequired from "@/components/section-required";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { __, handleFormErrorMessages } from "@/lib/utils";
@@ -35,7 +35,7 @@ export default function Index() {
           cancelButtonProps: { disabled: true },
         });
         return new Promise((resolve) => {
-          router.put(route("password.update"), values, {
+          router.put(route("settings.password.update"), values, {
             onSuccess: () => {
               message.success(__(locale, "message.success"));
             },
@@ -50,7 +50,20 @@ export default function Index() {
   };
 
   return (
-    <DashboardLayout title={__(locale, "lang.password")} submenus={MenuSetting()}>
+    <DashboardLayout
+      title={__(locale, "lang.password")}
+      breadcrumb={[
+        {
+          title: __(locale, "lang.settings"),
+          url: route("settings.profile.index"),
+        },
+        {
+          title: __(locale, "lang.password"),
+        },
+      ]}
+      innerSidebarMenu={InnerSidebarMenuUser()}
+      innerSidebarActiveMenu="password"
+    >
       <Form
         layout="vertical"
         form={formPassword}

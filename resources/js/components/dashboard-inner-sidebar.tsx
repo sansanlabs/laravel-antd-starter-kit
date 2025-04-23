@@ -6,13 +6,14 @@ import { useResponsive } from "antd-style";
 
 type MenuItemList = Required<MenuProps>["items"][number];
 
-type DashboardSidebarInnerMenuType = {
-  submenus?: MenuItemList[];
+type DashboardInnerSidebarType = {
+  innerSidebarMenu?: MenuItemList[];
+  innerSidebarActiveMenu?: string;
 };
 
-export default function DashboardSidebarInnerMenu({ submenus }: DashboardSidebarInnerMenuType) {
+export default function DashboardInnerSidebar({ innerSidebarMenu, innerSidebarActiveMenu }: DashboardInnerSidebarType) {
   const { mobile } = useResponsive();
-  const { locale, activeMenuContent } = usePage<SharedData>().props;
+  const { locale } = usePage<SharedData>().props;
 
   const {
     token: { colorText, colorFillSecondary, colorFillQuaternary },
@@ -20,7 +21,7 @@ export default function DashboardSidebarInnerMenu({ submenus }: DashboardSidebar
 
   return (
     <>
-      {mobile && submenus && (
+      {mobile && innerSidebarMenu && (
         <div
           style={{
             minHeight: 0,
@@ -35,8 +36,8 @@ export default function DashboardSidebarInnerMenu({ submenus }: DashboardSidebar
           <Dropdown
             menu={{
               selectable: true,
-              selectedKeys: [activeMenuContent],
-              items: submenus,
+              selectedKeys: [innerSidebarActiveMenu],
+              items: innerSidebarMenu,
             }}
           >
             <Button block type="primary">
@@ -46,11 +47,11 @@ export default function DashboardSidebarInnerMenu({ submenus }: DashboardSidebar
         </div>
       )}
 
-      {!mobile && submenus && (
+      {!mobile && innerSidebarMenu && (
         <div
           style={{
             minHeight: 0,
-            height: `${submenus.length * 38}px`,
+            height: `${innerSidebarMenu.length * 38}px`,
             position: "sticky",
             top: 83,
             display: "flex",
@@ -73,8 +74,8 @@ export default function DashboardSidebarInnerMenu({ submenus }: DashboardSidebar
           >
             <Menu
               theme="dark"
-              defaultSelectedKeys={[activeMenuContent]}
-              items={submenus}
+              defaultSelectedKeys={[innerSidebarActiveMenu]}
+              items={innerSidebarMenu}
               style={{
                 marginTop: -4,
                 width: 230,

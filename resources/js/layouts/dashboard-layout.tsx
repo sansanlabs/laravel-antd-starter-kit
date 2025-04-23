@@ -2,7 +2,7 @@ import DashboardCompanyLogo from "@/components/dashboard-company-logo";
 import DashboardDropdownUser from "@/components/dashboard-dropdown-user";
 import DashboardFooter from "@/components/dashboard-footer";
 import DashboardHeader from "@/components/dashboard-header";
-import DashboardSidebarInnerMenu from "@/components/dashboard-sidebar-inner-menu";
+import DashboardInnerSidebar from "@/components/dashboard-inner-sidebar";
 import DashboardSidebarMenu from "@/components/dashboard-sidebar-menu";
 import { Head } from "@inertiajs/react";
 import { Divider, Drawer, Flex, Layout, MenuProps, Typography } from "antd";
@@ -13,12 +13,23 @@ type MenuItemList = Required<MenuProps>["items"][number];
 
 type DashboardLayoutType = {
   title: string;
+  breadcrumb?: { title: string; url?: string }[];
+  activeMenu?: string;
+  innerSidebarMenu?: MenuItemList[];
+  innerSidebarActiveMenu?: string;
   extra?: React.ReactNode;
-  submenus?: MenuItemList[];
   children: React.ReactNode;
 };
 
-export default function DashboardLayout({ title, submenus, extra, children }: DashboardLayoutType) {
+export default function DashboardLayout({
+  title,
+  breadcrumb,
+  activeMenu,
+  innerSidebarMenu,
+  innerSidebarActiveMenu,
+  extra,
+  children,
+}: DashboardLayoutType) {
   const { colorBorder } = useTheme();
   const { mobile } = useResponsive();
 
@@ -40,7 +51,7 @@ export default function DashboardLayout({ title, submenus, extra, children }: Da
       >
         <DashboardCompanyLogo />
         <Divider style={{ margin: 0 }} />
-        <DashboardSidebarMenu isSidebarPanelCollapsed={isSidebarPanelCollapsed} />
+        <DashboardSidebarMenu activeMenu={activeMenu} isSidebarPanelCollapsed={isSidebarPanelCollapsed} />
         <Divider style={{ margin: 0 }} />
         <DashboardDropdownUser />
       </div>
@@ -97,6 +108,7 @@ export default function DashboardLayout({ title, submenus, extra, children }: Da
             setIsSidebarDrawerOpen={setIsSidebarDrawerOpen}
             isSidebarPanelCollapsed={isSidebarPanelCollapsed}
             setIsSidebarPanelCollapsed={setIsSidebarPanelCollapsed}
+            breadcrumb={breadcrumb}
           />
 
           <Layout.Content
@@ -124,9 +136,12 @@ export default function DashboardLayout({ title, submenus, extra, children }: Da
             </Flex>
 
             <Flex gap={16} vertical={mobile} flex={1} style={{ paddingInline: 16, paddingBottom: 16 }}>
-              <DashboardSidebarInnerMenu submenus={submenus} />
+              <DashboardInnerSidebar
+                innerSidebarMenu={innerSidebarMenu}
+                innerSidebarActiveMenu={innerSidebarActiveMenu}
+              />
 
-              <Flex flex={1} vertical gap={16} style={{ width: "100%" }}>
+              <Flex flex={1} vertical gap={16} style={{ width: "100%", overflow: "hidden" }}>
                 {children}
               </Flex>
             </Flex>

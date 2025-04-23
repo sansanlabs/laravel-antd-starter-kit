@@ -1,4 +1,4 @@
-import MenuSetting from "@/components/menu-setting";
+import InnerSidebarMenuUser from "@/components/inner-sidebar-menu-setting";
 import SectionRequired from "@/components/section-required";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { __, handleFormErrorMessages } from "@/lib/utils";
@@ -50,7 +50,7 @@ export default function Index() {
           cancelButtonProps: { disabled: true },
         });
         return new Promise((resolve) => {
-          router.put(route("profile.update"), values, {
+          router.put(route("settings.profile.update"), values, {
             onSuccess: () => {
               message.success(__(locale, "message.success"));
             },
@@ -74,7 +74,7 @@ export default function Index() {
           cancelButtonProps: { disabled: true },
         });
         return new Promise((resolve) => {
-          router.delete(route("profile.destroy", { password: values.password }), {
+          router.delete(route("settings.profile.destroy", { password: values.password }), {
             onSuccess: () => {
               message.success(__(locale, "message.success"));
             },
@@ -89,7 +89,20 @@ export default function Index() {
   };
 
   return (
-    <DashboardLayout title={__(locale, "lang.profile")} submenus={MenuSetting()}>
+    <DashboardLayout
+      title={__(locale, "lang.profile")}
+      breadcrumb={[
+        {
+          title: __(locale, "lang.settings"),
+          url: route("settings.profile.index"),
+        },
+        {
+          title: __(locale, "lang.profile"),
+        },
+      ]}
+      innerSidebarMenu={InnerSidebarMenuUser()}
+      innerSidebarActiveMenu="profile"
+    >
       <Flex vertical style={{ maxWidth: "40rem", width: "100%" }} gap={16}>
         <Form
           layout="vertical"

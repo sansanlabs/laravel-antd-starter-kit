@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\Settings;
+namespace App\Http\Controllers\Dashboard\Setting;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Password;
 use Inertia\Response;
 
 class PasswordController extends Controller {
@@ -16,7 +16,7 @@ class PasswordController extends Controller {
       "breadcrumb" => [
         [
           "title" => __("lang.settings"),
-          "url" => route("profile.index"),
+          "url" => route("settings.profile.index"),
         ],
         [
           "title" => __("lang.password"),
@@ -36,6 +36,6 @@ class PasswordController extends Controller {
       "password" => Hash::make($validatedData["password"]),
     ]);
 
-    return to_route("password.index");
+    return to_route("settings.password.index");
   }
 }

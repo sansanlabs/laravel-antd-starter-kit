@@ -1,4 +1,5 @@
 import { MenuItem } from "@/types";
+import { router } from "@inertiajs/react";
 import { FormInstance } from "antd";
 import { MessageInstance } from "antd/lib/message/interface";
 
@@ -6,6 +7,7 @@ import en from "../../../lang/en.json";
 import id from "../../../lang/id.json";
 import ja from "../../../lang/ja.json";
 
+// Find parent path for sidebar
 export function findParentPath(data: MenuItem[], targetKey: string, parentPath: string[] = []): string[] {
   for (const item of data) {
     const currentPath = [...parentPath, item.key];
@@ -22,7 +24,7 @@ export function findParentPath(data: MenuItem[], targetKey: string, parentPath: 
   return [];
 }
 
-// i18n
+// i18n or translation
 function replacePlaceholders(text: string, data: Record<string, string>) {
   return text.replace(/:\w+/g, function (matched) {
     const key = matched.slice(1);
@@ -60,3 +62,48 @@ export const handleFormErrorMessages = (
     form.scrollToField(errorsArray[0].name, { behavior: "smooth", block: "center" });
   }
 };
+
+// Handle sorting and searching
+function searchAndSorting(datas, route: string, params) {
+  const { column, search, sort, size } = datas;
+  const updatedParams = {
+    ...(column && { column }),
+    ...(search && { search }),
+    ...(sort && { sort }),
+    page: 1,
+    ...(size && { size }),
+    ...params,
+  };
+
+  if (!updatedParams.column) delete updatedParams.column;
+  if (!updatedParams.sort) delete updatedParams.sort;
+  if (!updatedParams.search) delete updatedParams.search;
+  if (updatedParams.page === 1) delete updatedParams.page;
+  if (updatedParams.size === 10) delete updatedParams.size;
+  // updatedParams.status = ["active", "suspend"].join(",");
+
+  router.get(route, updatedParams, {
+    preserveState: true,
+  });
+}
+
+export function handleSearch(datas, route, value) {
+  searchAndSorting(datas, route, { search: value, page: 1 });
+}
+
+export function handleTableChange(datas, route, size, sorter) {
+  const order = sorter.order ? (sorter.order === "ascend" ? "asc" : "desc") : null;
+  const column = order && sorter.field;
+
+  searchAndSorting(datas, route, {
+    column: column,
+    sort: order,
+    page: size.current,
+    size: size.pageSize,
+  });
+}
+
+// Default sort order
+export function getDefaultSortOrder(data, column: string) {
+  return data.column === column ? (data.sort === "asc" ? "ascend" : "descend") : null;
+}

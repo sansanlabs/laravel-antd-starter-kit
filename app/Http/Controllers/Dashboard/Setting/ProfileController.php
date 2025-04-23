@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\Settings;
+namespace App\Http\Controllers\Dashboard\Setting;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -14,7 +14,7 @@ class ProfileController extends Controller {
       "breadcrumb" => [
         [
           "title" => __("lang.settings"),
-          "url" => route("profile.index"),
+          "url" => route("settings.profile.index"),
         ],
         [
           "title" => __("lang.profile"),
@@ -41,7 +41,7 @@ class ProfileController extends Controller {
 
       $request->user()->save();
 
-      return to_route("profile.index");
+      return to_route("settings.profile.index");
     } catch (\Throwable $th) {
       handleTrowable($th);
     }

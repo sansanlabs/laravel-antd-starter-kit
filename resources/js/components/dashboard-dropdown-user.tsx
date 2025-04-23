@@ -129,7 +129,7 @@ export default function DashbordDropdownUser() {
             { type: "divider" },
             {
               key: "settings",
-              label: <Link href={route("profile.index")}>{__(locale, "lang.settings")}</Link>,
+              label: <Link href={route("settings.profile.index")}>{__(locale, "lang.settings")}</Link>,
               icon: <LuSettings size={14} />,
             },
             {

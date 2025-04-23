@@ -11,4 +11,15 @@ class ActivityLog extends Activity {
   use LogsRequestData;
 
   protected $fillable = ["url", "method", "ip", "agent"];
+
+  public function scopeSearch($query, $search): mixed {
+    return $query->whereAny(["description", "url", "event", "method", "ip"], "LIKE", "%$search%");
+  }
+
+  public function scopeSort($query, $column, $sort): mixed {
+    if (!$column) {
+      return $query->orderBy("id", "desc");
+    }
+    return $query->orderBy($column, $sort);
+  }
 }

@@ -12,6 +12,7 @@ type DashboardHeaderType = {
   setIsSidebarDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isSidebarPanelCollapsed: boolean;
   setIsSidebarPanelCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+  breadcrumb?: { title: string; url?: string }[];
 };
 
 export default function DashboardHeader({
@@ -19,8 +20,9 @@ export default function DashboardHeader({
   setIsSidebarDrawerOpen,
   isSidebarPanelCollapsed,
   setIsSidebarPanelCollapsed,
+  breadcrumb = [],
 }: DashboardHeaderType) {
-  const { locale, breadcrumb = [] } = usePage<SharedData>().props;
+  const { locale = [] } = usePage<SharedData>().props;
   const { colorBorder } = useTheme();
   const { mobile } = useResponsive();
 
@@ -97,8 +99,7 @@ export default function DashboardHeader({
       </Flex>
       <Divider type="vertical" style={{ margin: 0, marginTop: 1, height: 32 }} />
 
-      {/* <Breadcrumb className="!mb-0.5 hidden md:block" items={items} /> */}
-      <Breadcrumb style={{ paddingTop: 5 }} items={items} />
+      <Breadcrumb style={{ paddingTop: 3, width: "100%" }} items={items} />
     </Layout.Header>
   );
 }
