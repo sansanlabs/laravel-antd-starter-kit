@@ -2,7 +2,6 @@ import ColumnCreatedAtUpdatedAt from "@/components/column-created-at-updated-at"
 import Datatable from "@/components/datatable";
 import InputSearchDatatable from "@/components/input-search-datatable";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import { can, canAll, canAny } from "@/lib/permissions";
 import { __, getDefaultSortOrder } from "@/lib/utils";
 import { PermissionType, QueryResultType, RoleType, SharedData } from "@/types";
 import { Link, router, usePage } from "@inertiajs/react";
@@ -16,7 +15,7 @@ type IndexType = {
 };
 
 export default function Index({ queryResult, pemissionsTotal }: IndexType) {
-  const { locale, permissions } = usePage<SharedData>().props;
+  const { locale } = usePage<SharedData>().props;
   const { modal, message } = App.useApp();
 
   const onDelete = (id: string) => {
@@ -73,7 +72,7 @@ export default function Index({ queryResult, pemissionsTotal }: IndexType) {
       ),
     },
     ...ColumnCreatedAtUpdatedAt(queryResult),
-    canAny(permissions, ["Roles.Detail", "Roles.Edit", "Roles.Delete"]) && {
+    {
       title: __(locale, "lang.action"),
       dataIndex: "id",
       key: "id",
@@ -89,22 +88,21 @@ export default function Index({ queryResult, pemissionsTotal }: IndexType) {
             placement="bottomRight"
             menu={{
               items: [
-                can(permissions, "Roles.Detail") && {
+                {
                   key: "detail",
                   label: <Link href={route("roles.show", { role: id })}>{__(locale, "lang.detail")}</Link>,
                   icon: <LuListMinus size={14} />,
                 },
-                can(permissions, "Roles.Edit") && {
+                {
                   key: "edit",
                   label: <Link href={route("roles.edit", { role: id })}>{__(locale, "lang.edit")}</Link>,
                   icon: <LuPencilLine size={14} />,
                   disabled: isSuperAdmin,
                 },
-                (canAll(permissions, ["Roles.Detail", "Roles.Delete"]) ||
-                  canAll(permissions, ["Roles.Edit", "Roles.Delete"])) && {
+                {
                   type: "divider",
                 },
-                can(permissions, "Roles.Delete") && {
+                {
                   key: "delete",
                   label: __(locale, "lang.delete"),
                   icon: <LuTrash2 size={14} />,
@@ -133,13 +131,12 @@ export default function Index({ queryResult, pemissionsTotal }: IndexType) {
       ]}
       extra={
         <>
-          {can(permissions, "Roles.Create") && (
-            <Link href={route("roles.create")}>
-              <Button type="primary" icon={<LuPlus />}>
-                {__(locale, "lang.create_role")}
-              </Button>
-            </Link>
-          )}
+          <Link href={route("roles.create")}>
+            <Button type="primary" icon={<LuPlus />}>
+              {__(locale, "lang.create_role")}
+            </Button>
+          </Link>
+
           <InputSearchDatatable queryResult={queryResult} route={route("roles.index")} />
         </>
       }

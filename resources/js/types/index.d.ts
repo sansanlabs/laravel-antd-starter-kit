@@ -86,6 +86,7 @@ export interface SessionType {
 export interface RoleType {
   id: string;
   name: string;
+  description: string;
   guard: string;
   created_at: string;
   updated_at: string;
@@ -95,6 +96,7 @@ export interface RoleType {
 export interface PermissionType {
   id: string;
   name: string;
+  description: string;
   guard: string;
   created_at: string;
   updated_at: string;

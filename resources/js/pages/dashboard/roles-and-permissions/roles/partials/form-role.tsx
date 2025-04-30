@@ -1,4 +1,3 @@
-import ModalOTP from "@/components/modal-otp";
 import SectionRequired from "@/components/section-required";
 import { __, handleFormErrorMessages } from "@/lib/utils";
 import { RoleType, SharedData } from "@/types";
@@ -22,54 +21,56 @@ type FormRoleType = {
 };
 
 export default function FormRole({ role, permissions, selectedCollapseIds }: FormRoleType) {
-  const {
-    auth: { user: authUser },
-    locale,
-  } = usePage<SharedData>().props;
-  const { message } = App.useApp();
+  const { locale } = usePage<SharedData>().props;
+  const { modal, message } = App.useApp();
   const { colorBorderSecondary } = useTheme();
 
-  const [isModalOtpOpen, setIsModalOtpOpen] = useState<boolean>(false);
   const [permissionsDataSource, setPermissionsDataSource] = useState<FormRoleType["permissions"]>(permissions);
-  const [formValues, setFormValues] = useState(undefined);
+  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
 
   const [formRole] = Form.useForm();
 
-  const onSave = (resolveOtp: () => void) => {
-    const options = {
-      onSuccess: () => {
-        message.destroy();
-        message.success(__(locale, "message.success"));
-      },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onError: (errors: any) => {
-        handleFormErrorMessages(errors, message, formRole);
-      },
-      onFinish: resolveOtp,
-    };
+  const onSave = (values: { name: string; description: string; permissions: string[] }) => {
+    values.permissions = selectedPermissions;
 
-    if (!role) {
-      return router.post(route("roles.store"), formValues, options);
-    }
-    return router.put(route("roles.update", { role: role.id }), formValues, options);
+    const modalConfirm = modal.confirm({
+      title: __(locale, "modal_confirm.title"),
+      content: __(locale, "modal_confirm.desc"),
+      cancelButtonProps: { disabled: false },
+      onOk: () => {
+        modalConfirm.update({
+          cancelButtonProps: { disabled: true },
+        });
+
+        return new Promise((resolve) => {
+          const options = {
+            onSuccess: () => {
+              message.destroy();
+              message.success(__(locale, "message.success"));
+            },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onError: (errors: any) => {
+              handleFormErrorMessages(errors, message, formRole);
+            },
+            onFinish: resolve,
+          };
+
+          if (!role) {
+            return router.post(route("roles.store"), values, options);
+          }
+          return router.put(route("roles.update", { role: role.id }), values, options);
+        });
+      },
+    });
   };
 
   return (
     <div>
-      <ModalOTP open={isModalOtpOpen} setOpen={setIsModalOtpOpen} next={onSave} />
-      <SectionRequired with2fa />
+      <SectionRequired />
       <Form
         layout="vertical"
         form={formRole}
-        onFinish={(values) => {
-          if (!authUser.tfa_enabled) {
-            return message.warning(
-              `${__(locale, "lang.you_have_not_enabled_two_factor_authentication")}. ${__(locale, "lang.please_enable_first")}`
-            );
-          }
-          setIsModalOtpOpen(true);
-          setFormValues(values);
-        }}
+        onFinish={onSave}
         onFinishFailed={({ errorFields }) => {
           formRole.scrollToField(errorFields[0].name, { behavior: "smooth", block: "center" });
         }}
@@ -165,7 +166,7 @@ export default function FormRole({ role, permissions, selectedCollapseIds }: For
               rowSelection={{
                 onSelect: (record, selected, selectedRows) => {
                   const selectedPermission = selectedRows.filter((r) => r.id).map((r) => r.name);
-                  formRole.setFieldsValue({ permissions: selectedPermission });
+                  setSelectedPermissions(selectedPermission);
                 },
                 checkStrictly: false,
                 selectedRowKeys: selectedCollapseIds,
