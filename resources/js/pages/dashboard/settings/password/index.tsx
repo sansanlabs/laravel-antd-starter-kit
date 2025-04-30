@@ -52,6 +52,7 @@ export default function Index() {
   return (
     <DashboardLayout
       title={__(locale, "lang.password")}
+      activeMenu=""
       breadcrumb={[
         {
           title: __(locale, "lang.settings"),

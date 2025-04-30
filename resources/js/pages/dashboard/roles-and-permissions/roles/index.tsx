@@ -1,13 +1,14 @@
 import ColumnCreatedAtUpdatedAt from "@/components/column-created-at-updated-at";
 import Datatable from "@/components/datatable";
 import InputSearchDatatable from "@/components/input-search-datatable";
-import SortIcon from "@/components/sort-icon";
 import DashboardLayout from "@/layouts/dashboard-layout";
+import { can, canAll, canAny } from "@/lib/permissions";
 import { __, getDefaultSortOrder } from "@/lib/utils";
-import { PermissionType, QueryResultType, SharedData } from "@/types";
+import { PermissionType, QueryResultType, RoleType, SharedData } from "@/types";
 import { Link, router, usePage } from "@inertiajs/react";
-import { App, Button, Dropdown, Flex, Typography } from "antd";
-import { LuChevronDown, LuEye, LuPencilLine, LuPlus, LuTrash2 } from "react-icons/lu";
+import { App, Button, Dropdown, TableProps, Typography } from "antd";
+import { MenuItemType } from "antd/lib/menu/interface";
+import { LuChevronDown, LuListMinus, LuPencilLine, LuPlus, LuTrash2 } from "react-icons/lu";
 
 type IndexType = {
   queryResult: QueryResultType;
@@ -15,8 +16,8 @@ type IndexType = {
 };
 
 export default function Index({ queryResult, pemissionsTotal }: IndexType) {
+  const { locale, permissions } = usePage<SharedData>().props;
   const { modal, message } = App.useApp();
-  const { locale } = usePage<SharedData>().props;
 
   const onDelete = (id: string) => {
     const modalConfirm = modal.confirm({
@@ -46,13 +47,20 @@ export default function Index({ queryResult, pemissionsTotal }: IndexType) {
     });
   };
 
-  const columns: object[] = [
+  const columns = [
     {
       title: __(locale, "lang.name"),
       key: "name",
       dataIndex: "name",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(queryResult, "name"),
+    },
+    {
+      title: __(locale, "lang.description"),
+      key: "description",
+      dataIndex: "description",
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(queryResult, "description"),
     },
     {
       title: __(locale, "lang.permissions"),
@@ -65,52 +73,54 @@ export default function Index({ queryResult, pemissionsTotal }: IndexType) {
       ),
     },
     ...ColumnCreatedAtUpdatedAt(queryResult),
-    {
+    canAny(permissions, ["Roles.Detail", "Roles.Edit", "Roles.Delete"]) && {
       title: __(locale, "lang.action"),
       dataIndex: "id",
       key: "id",
       fixed: "right",
       align: "center",
       width: 1,
-      render: (id: string) => (
-        <Dropdown
-          trigger={["click"]}
-          placement="bottomRight"
-          menu={{
-            items: [
-              {
-                key: "detail",
-                label: <Link href={route("roles.show", { role: id })}>{__(locale, "lang.detail")}</Link>,
-                icon: <LuEye size={14} />,
-              },
-              {
-                key: "edit",
-                label: <Link href={route("roles.edit", { role: id })}>{__(locale, "lang.edit")}</Link>,
-                icon: <LuPencilLine size={14} />,
-              },
-              {
-                type: "divider",
-              },
-              {
-                key: "delete",
-                label: __(locale, "lang.delete"),
-                icon: <LuTrash2 size={14} />,
-                danger: true,
-                onClick: () => onDelete(id),
-              },
-            ],
-          }}
-        >
-          <Button icon={<LuChevronDown size={16} style={{ marginBottom: -2 }} />} />
-        </Dropdown>
-      ),
+      render: (id: string, record: RoleType) => {
+        const isSuperAdmin = record.name === "SuperAdmin";
+
+        return (
+          <Dropdown
+            trigger={["click"]}
+            placement="bottomRight"
+            menu={{
+              items: [
+                can(permissions, "Roles.Detail") && {
+                  key: "detail",
+                  label: <Link href={route("roles.show", { role: id })}>{__(locale, "lang.detail")}</Link>,
+                  icon: <LuListMinus size={14} />,
+                },
+                can(permissions, "Roles.Edit") && {
+                  key: "edit",
+                  label: <Link href={route("roles.edit", { role: id })}>{__(locale, "lang.edit")}</Link>,
+                  icon: <LuPencilLine size={14} />,
+                  disabled: isSuperAdmin,
+                },
+                (canAll(permissions, ["Roles.Detail", "Roles.Delete"]) ||
+                  canAll(permissions, ["Roles.Edit", "Roles.Delete"])) && {
+                  type: "divider",
+                },
+                can(permissions, "Roles.Delete") && {
+                  key: "delete",
+                  label: __(locale, "lang.delete"),
+                  icon: <LuTrash2 size={14} />,
+                  danger: true,
+                  disabled: isSuperAdmin,
+                  onClick: () => onDelete(id),
+                },
+              ].filter(Boolean) as MenuItemType[],
+            }}
+          >
+            <Button icon={<LuChevronDown size={16} style={{ marginBottom: -2 }} />} />
+          </Dropdown>
+        );
+      },
     },
-  ].map((column) => {
-    if (column.sorter) {
-      return { ...column, sortIcon: ({ sortOrder }: { sortOrder: string }) => <SortIcon sortOrder={sortOrder} /> };
-    }
-    return column;
-  });
+  ] as TableProps["columns"];
 
   return (
     <DashboardLayout
@@ -123,11 +133,13 @@ export default function Index({ queryResult, pemissionsTotal }: IndexType) {
       ]}
       extra={
         <>
-          <Link href={route("roles.create")}>
-            <Button type="primary" icon={<LuPlus />}>
-              {__(locale, "lang.create_role")}
-            </Button>
-          </Link>
+          {can(permissions, "Roles.Create") && (
+            <Link href={route("roles.create")}>
+              <Button type="primary" icon={<LuPlus />}>
+                {__(locale, "lang.create_role")}
+              </Button>
+            </Link>
+          )}
           <InputSearchDatatable queryResult={queryResult} route={route("roles.index")} />
         </>
       }

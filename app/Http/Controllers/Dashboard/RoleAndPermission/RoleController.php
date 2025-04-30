@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Dashboard\RoleAndPermission;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RoleAndPermission\RoleRequest;
+use App\Http\Requests\Dashboard\RoleAndPermission\RoleRequest;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\RedirectResponse;
@@ -12,23 +12,10 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Response;
 
 class RoleController extends Controller {
-  protected function pluckPermission($permissions): array {
-    $result = [];
-    foreach ($permissions as $item) {
-      $nameParts = explode(".", $item["name"]);
-      $groupKey = $nameParts[0];
-
-      if (!isset($result[$groupKey])) {
-        $result[$groupKey] = [
-          "name" => $groupKey,
-          "options" => [],
-        ];
-      }
-
-      $result[$groupKey]["options"][] = $item;
+  private function SuperAdminRoleCheck($role) {
+    if ($role->name === "SuperAdmin") {
+      abort(404);
     }
-
-    return array_values($result);
   }
 
   public function index(Request $request): Response {
@@ -51,13 +38,13 @@ class RoleController extends Controller {
 
   public function create(): Response {
     $permissions = Permission::all()
-      ->select(["id", "name"])
+      ->select(["id", "name", "description"])
       ->toArray();
 
-    $result = $this->pluckPermission($permissions);
+    $permissions = permissionFormatted($permissions);
 
-    return inertia("dashboard/role/create", [
-      "permissions" => $result,
+    return inertia("dashboard/roles-and-permissions/roles/create", [
+      "allPermissions" => $permissions,
     ]);
   }
 
@@ -66,7 +53,10 @@ class RoleController extends Controller {
 
     DB::beginTransaction();
     try {
-      $newRole = Role::create(["name" => $dataValidated["name"]]);
+      $newRole = Role::create([
+        "name" => $dataValidated["name"],
+        "description" => $dataValidated["description"],
+      ]);
       $newRole->syncPermissions($dataValidated["permissions"]);
       $newPermissions = $newRole
         ->permissions()
@@ -94,33 +84,54 @@ class RoleController extends Controller {
     $role->permissions = $role->permissions()->pluck("name");
 
     $permissions = Permission::all()
-      ->select(["id", "name"])
+      ->select(["id", "name", "description"])
       ->toArray();
-    $result = $this->pluckPermission($permissions);
+    $permissionsFormatted = permissionFormatted($permissions);
 
-    return inertia("dashboard/role/show", [
+    $rolePermission = $role
+      ->permissions()
+      ->select(["id", "name", "description"])
+      ->get()
+      ->toArray();
+    $rolePermission = permissionFormatted($rolePermission);
+    $selectedCollapseIds = array_map(fn($item) => $item["name"], $rolePermission);
+
+    return inertia("dashboard/roles-and-permissions/roles/show", [
       "role" => $role,
-      "permissions" => $result,
+      "allPermissions" => $permissionsFormatted,
       "permissionTotal" => count($permissions),
+      "selectedCollapseIds" => $selectedCollapseIds,
     ]);
   }
 
   public function edit(Role $role): Response {
+    $this->SuperAdminRoleCheck($role);
+
     $role->permissions = $role->permissions()->pluck("name");
 
     $permissions = Permission::all()
-      ->select(["id", "name"])
+      ->select(["id", "name", "description"])
       ->toArray();
+    $permissions = permissionFormatted($permissions);
 
-    $result = $this->pluckPermission($permissions);
+    $rolePermission = $role
+      ->permissions()
+      ->select(["id", "name", "description"])
+      ->get()
+      ->toArray();
+    $rolePermission = permissionFormatted($rolePermission);
+    $selectedCollapseIds = array_map(fn($item) => $item["name"], $rolePermission);
 
-    return inertia("dashboard/role/edit", [
+    return inertia("dashboard/roles-and-permissions/roles/edit", [
       "role" => $role,
-      "permissions" => $result,
+      "allPermissions" => $permissions,
+      "selectedCollapseIds" => $selectedCollapseIds,
     ]);
   }
 
   public function update(Role $role, RoleRequest $request): RedirectResponse {
+    $this->SuperAdminRoleCheck($role);
+
     $dataValidated = $request->validated();
 
     DB::beginTransaction();
@@ -164,6 +175,8 @@ class RoleController extends Controller {
   }
 
   public function destroy(Role $role): RedirectResponse {
+    $this->SuperAdminRoleCheck($role);
+
     try {
       $role->delete();
       return redirect()->route("roles.index");

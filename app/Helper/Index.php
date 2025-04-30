@@ -38,3 +38,29 @@ if (!function_exists("initializeResultArray")) {
     ];
   }
 }
+
+if (!function_exists("permissionFormatted")) {
+  function permissionFormatted($permissions): array {
+    $result = [];
+    foreach ($permissions as $permission) {
+      $lastDotPos = strrpos($permission["name"], ".");
+
+      if ($lastDotPos === false) {
+        return $permission["name"];
+      }
+
+      $groupKey = substr($permission["name"], 0, $lastDotPos);
+
+      if (!isset($result[$groupKey])) {
+        $result[$groupKey] = [
+          "name" => $groupKey,
+          "options" => [],
+        ];
+      }
+
+      $result[$groupKey]["options"][] = $permission;
+    }
+
+    return array_values($result);
+  }
+}

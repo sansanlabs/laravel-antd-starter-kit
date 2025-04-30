@@ -25,32 +25,17 @@ return Application::configure(basePath: dirname(__DIR__))
   ->withExceptions(function (Exceptions $exceptions) {
     $exceptions->respond(function (Response $response, Throwable $exception, Request $request): RedirectResponse|Response {
       if (app()->environment(["production"]) && in_array($response->getStatusCode(), [500, 503, 404, 403])) {
-        if (!$request->hasSession()) {
-          $middlewares = [
-            app(EncryptCookies::class),
-            app(AddQueuedCookiesToResponse::class),
-            app(StartSession::class),
-            app(ShareErrorsFromSession::class),
-            app(HandleInertiaRequests::class),
-          ];
-
-          $responseHandler = function ($request) use ($response) {
-            return inertia("error", [
-              "status" => $response->getStatusCode(),
-            ])
-              ->toResponse($request)
-              ->setStatusCode($response->getStatusCode());
-          };
-
-          foreach (array_reverse($middlewares) as $middleware) {
-            $next = $responseHandler;
-            $responseHandler = fn($req) => $middleware->handle($req, $next);
-          }
-
-          return $responseHandler($request);
-        }
+        $locale = session()->has("locale") ? session("locale") : app()->getLocale();
 
         return inertia("error", [
+          "companyName" => config("app.company_name"),
+          "appName" => config("app.name"),
+          "locale" => $locale,
+          "roles" => auth()->user() ? $request->user()->roles()->pluck("name") : [],
+          "permissions" => auth()->user() ? $request->user()->getPermissionsViaRoles()->pluck("name")->unique()->values()->all() : [],
+          "auth" => [
+            "user" => $request->user(),
+          ],
           "status" => $response->getStatusCode(),
         ])
           ->toResponse($request)

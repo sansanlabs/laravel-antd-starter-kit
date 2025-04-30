@@ -39,9 +39,11 @@ class HandleInertiaRequests extends Middleware {
 
     return [
       ...parent::share($request),
-      "companyName" => "Lorem Ipsum Inc",
+      "companyName" => config("app.company_name"),
       "appName" => config("app.name"),
       "locale" => $locale,
+      "roles" => auth()->user() ? $request->user()->roles()->pluck("name") : [],
+      "permissions" => auth()->user() ? $request->user()->getPermissionsViaRoles()->pluck("name")->unique()->values()->all() : [],
       "quote" => [
         "message" => trim($message),
         "author" => trim($author),

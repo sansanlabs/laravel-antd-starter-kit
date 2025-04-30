@@ -1,0 +1,194 @@
+import ModalOTP from "@/components/modal-otp";
+import SectionRequired from "@/components/section-required";
+import { __, handleFormErrorMessages } from "@/lib/utils";
+import { RoleType, SharedData } from "@/types";
+import { router, usePage } from "@inertiajs/react";
+import { App, Button, Divider, Flex, Form, Input, Table } from "antd";
+import { useTheme } from "antd-style";
+import { useState } from "react";
+import { LuSave, LuSearch } from "react-icons/lu";
+
+type FormRoleType = {
+  role?: RoleType;
+  permissions: {
+    name: string;
+    options: {
+      id: string;
+      name: string;
+      description: string;
+    }[];
+  }[];
+  selectedCollapseIds?: string[];
+};
+
+export default function FormRole({ role, permissions, selectedCollapseIds }: FormRoleType) {
+  const {
+    auth: { user: authUser },
+    locale,
+  } = usePage<SharedData>().props;
+  const { message } = App.useApp();
+  const { colorBorderSecondary } = useTheme();
+
+  const [isModalOtpOpen, setIsModalOtpOpen] = useState<boolean>(false);
+  const [permissionsDataSource, setPermissionsDataSource] = useState<FormRoleType["permissions"]>(permissions);
+  const [formValues, setFormValues] = useState(undefined);
+
+  const [formRole] = Form.useForm();
+
+  const onSave = (resolveOtp: () => void) => {
+    const options = {
+      onSuccess: () => {
+        message.destroy();
+        message.success(__(locale, "message.success"));
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onError: (errors: any) => {
+        handleFormErrorMessages(errors, message, formRole);
+      },
+      onFinish: resolveOtp,
+    };
+
+    if (!role) {
+      return router.post(route("roles.store"), formValues, options);
+    }
+    return router.put(route("roles.update", { role: role.id }), formValues, options);
+  };
+
+  return (
+    <div>
+      <ModalOTP open={isModalOtpOpen} setOpen={setIsModalOtpOpen} next={onSave} />
+      <SectionRequired with2fa />
+      <Form
+        layout="vertical"
+        form={formRole}
+        onFinish={(values) => {
+          if (!authUser.tfa_enabled) {
+            return message.warning(
+              `${__(locale, "lang.you_have_not_enabled_two_factor_authentication")}. ${__(locale, "lang.please_enable_first")}`
+            );
+          }
+          setIsModalOtpOpen(true);
+          setFormValues(values);
+        }}
+        onFinishFailed={({ errorFields }) => {
+          formRole.scrollToField(errorFields[0].name, { behavior: "smooth", block: "center" });
+        }}
+        initialValues={
+          role
+            ? {
+                name: role.name,
+                description: role.description,
+                permissions: role.permissions,
+              }
+            : {
+                permissions: [],
+              }
+        }
+      >
+        <Form.Item
+          label={__(locale, "lang.name")}
+          name="name"
+          rules={[
+            { required: true, message: __(locale, "validation.required", { attribute: __(locale, "lang.name") }) },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label={__(locale, "lang.description")}
+          name="description"
+          rules={[
+            {
+              required: true,
+              message: __(locale, "validation.required", { attribute: __(locale, "lang.description") }),
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item label={__(locale, "lang.permissions")} name="permissions">
+          <div>
+            <Input
+              allowClear
+              prefix={<LuSearch />}
+              placeholder={__(locale, "lang.search_here")}
+              style={{ marginBottom: 8 }}
+              onChange={(e) => {
+                const keyword = e.currentTarget.value.trim();
+
+                const lowerKeyword = keyword.toLowerCase();
+
+                const permissionFiltered = permissions
+                  .map((permission) => {
+                    const filteredOptions = permission.options.filter(
+                      (option) =>
+                        option.name.toLowerCase().includes(lowerKeyword) ||
+                        option.description.toLowerCase().includes(lowerKeyword)
+                    );
+
+                    if (filteredOptions.length > 0) {
+                      return {
+                        ...permission,
+                        options: filteredOptions,
+                      };
+                    }
+
+                    return null;
+                  })
+                  .filter(Boolean);
+
+                setPermissionsDataSource(permissionFiltered as FormRoleType["permissions"]);
+              }}
+            />
+
+            <Divider style={{ marginBlock: 0, borderColor: colorBorderSecondary }} />
+
+            <Table
+              size="small"
+              rowKey="name"
+              columns={[
+                {
+                  title: __(locale, "lang.name"),
+                  dataIndex: "name",
+                  key: "name",
+                },
+                {
+                  title: __(locale, "lang.description"),
+                  dataIndex: "description",
+                  key: "description",
+                },
+              ]}
+              scroll={{ x: "max-content" }}
+              showHeader={false}
+              rowSelection={{
+                onSelect: (record, selected, selectedRows) => {
+                  const selectedPermission = selectedRows.filter((r) => r.id).map((r) => r.name);
+                  formRole.setFieldsValue({ permissions: selectedPermission });
+                },
+                checkStrictly: false,
+                selectedRowKeys: selectedCollapseIds,
+              }}
+              expandable={{
+                expandRowByClick: true,
+                defaultExpandAllRows: true,
+              }}
+              dataSource={permissionsDataSource.map((permission) => ({
+                name: permission.name,
+                children: permission.options,
+              }))}
+              pagination={false}
+            />
+          </div>
+        </Form.Item>
+
+        <Flex justify="end">
+          <Button htmlType="submit" type="primary" icon={<LuSave />}>
+            {__(locale, "lang.save")}
+          </Button>
+        </Flex>
+      </Form>
+    </div>
+  );
+}

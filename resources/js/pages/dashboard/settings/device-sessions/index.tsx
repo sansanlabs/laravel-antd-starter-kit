@@ -5,7 +5,7 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 import { __ } from "@/lib/utils";
 import { QueryResultType, SessionType, SharedData, UserType } from "@/types";
 import { router, usePage } from "@inertiajs/react";
-import { App, Button, Dropdown, Tag, Typography } from "antd";
+import { App, Button, Dropdown, TableProps, Tag, Typography } from "antd";
 import dayjs from "dayjs";
 import { LuChevronDown, LuLogOut } from "react-icons/lu";
 import { UAParser } from "ua-parser-js";
@@ -150,6 +150,7 @@ export default function Index({ user, queryResult, sessionId }: IndexType) {
   return (
     <DashboardLayout
       title={`${__(locale, "lang.device_sessions")}`}
+      activeMenu=""
       breadcrumb={[
         {
           title: __(locale, "lang.settings"),
@@ -176,7 +177,11 @@ export default function Index({ user, queryResult, sessionId }: IndexType) {
         </>
       }
     >
-      <Datatable queryResult={queryResult} route={route("settings.device-sessions.index")} columns={columns} />
+      <Datatable
+        queryResult={queryResult}
+        route={route("settings.device-sessions.index")}
+        columns={columns as TableProps["columns"]}
+      />
     </DashboardLayout>
   );
 }

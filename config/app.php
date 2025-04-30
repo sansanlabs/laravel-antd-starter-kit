@@ -1,6 +1,8 @@
 <?php
 
 return [
+  "company_name" => "Lorem Ipsum Inc",
+
   /*
     |--------------------------------------------------------------------------
     | Application Name

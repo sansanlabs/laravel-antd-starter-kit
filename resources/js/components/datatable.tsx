@@ -1,20 +1,30 @@
 import { __, handleTableChange } from "@/lib/utils";
 import { QueryResultType, SharedData } from "@/types";
 import { usePage } from "@inertiajs/react";
-import { Table } from "antd";
+import { Table, TableProps } from "antd";
+
+import SortIcon from "./sort-icon";
 
 type DatatableType = {
   queryResult: QueryResultType;
   route: string;
-  columns: object[];
+  columns: TableProps["columns"];
 };
 
-export default function Datatable({ queryResult, route, columns }: DatatableType) {
+export default function Datatable({ queryResult, route, columns = [] }: DatatableType) {
   const { locale } = usePage<SharedData>().props;
+
+  const columnsFiltered: TableProps["columns"] = columns
+    .filter((item): item is Exclude<typeof item, false | null | undefined> => Boolean(item))
+    .map((column) => {
+      if (column.sorter) {
+        return { ...column, sortIcon: ({ sortOrder }: { sortOrder: string }) => <SortIcon sortOrder={sortOrder} /> };
+      }
+      return column;
+    }) as TableProps["columns"];
 
   return (
     <Table
-      // bordered
       rowKey="id"
       style={{
         marginBottom: -16,
@@ -22,7 +32,7 @@ export default function Datatable({ queryResult, route, columns }: DatatableType
       onChange={(pagination, filter, sorter) => handleTableChange(queryResult, route, pagination, sorter)}
       size="small"
       scroll={{ x: "max-content" }}
-      columns={columns}
+      columns={columnsFiltered}
       dataSource={queryResult.data}
       pagination={{
         size: "default",
@@ -31,7 +41,12 @@ export default function Datatable({ queryResult, route, columns }: DatatableType
         pageSize: queryResult.size,
         responsive: true,
         showSizeChanger: true,
-        showTotal: (total, range) => __(locale, "lang.total_data_table", { from: range[0], to: range[1], total }),
+        showTotal: (total, range) =>
+          __(locale, "lang.total_data_table", {
+            from: range[0].toString(),
+            to: range[1].toString(),
+            total: total.toString(),
+          }),
       }}
     />
   );

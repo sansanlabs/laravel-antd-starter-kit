@@ -1,7 +1,7 @@
 import { __ } from "@/lib/utils";
 import { SharedData } from "@/types";
 import { Link, usePage } from "@inertiajs/react";
-import { Breadcrumb, Button, Divider, Flex, Layout } from "antd";
+import { Breadcrumb, BreadcrumbProps, Button, Divider, Flex, Layout } from "antd";
 import { useResponsive, useTheme } from "antd-style";
 import { LuEllipsis, LuHouse, LuPanelLeft } from "react-icons/lu";
 
@@ -12,7 +12,7 @@ type DashboardHeaderType = {
   setIsSidebarDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isSidebarPanelCollapsed: boolean;
   setIsSidebarPanelCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
-  breadcrumb?: { title: string; url?: string }[];
+  breadcrumb: { title: string; url?: string | false }[];
 };
 
 export default function DashboardHeader({
@@ -22,7 +22,7 @@ export default function DashboardHeader({
   setIsSidebarPanelCollapsed,
   breadcrumb = [],
 }: DashboardHeaderType) {
-  const { locale = [] } = usePage<SharedData>().props;
+  const { locale } = usePage<SharedData>().props;
   const { colorBorder } = useTheme();
   const { mobile } = useResponsive();
 
@@ -99,7 +99,7 @@ export default function DashboardHeader({
       </Flex>
       <Divider type="vertical" style={{ margin: 0, marginTop: 1, height: 32 }} />
 
-      <Breadcrumb style={{ paddingTop: 3, width: "100%" }} items={items} />
+      <Breadcrumb style={{ paddingTop: 3, width: "100%" }} items={items as BreadcrumbProps["items"]} />
     </Layout.Header>
   );
 }

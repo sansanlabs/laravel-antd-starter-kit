@@ -11,7 +11,7 @@ class Permission extends SpatiePermission {
   use HasUserstamps;
   use LogsActivity;
 
-  protected $fillable = ["description"];
+  protected $fillable = ["name", "description", "guard_name"];
 
   public function getActivitylogOptions(): LogOptions {
     return LogOptions::defaults()
@@ -22,7 +22,7 @@ class Permission extends SpatiePermission {
   }
 
   public function scopeSearch($query, $search): mixed {
-    return $query->whereAny(["name"], "LIKE", "%$search%");
+    return $query->whereAny(["name", "description"], "LIKE", "%$search%");
   }
 
   public function scopeSort($query, $column, $sort): mixed {

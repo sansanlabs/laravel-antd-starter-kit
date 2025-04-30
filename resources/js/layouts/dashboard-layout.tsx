@@ -13,8 +13,8 @@ type MenuItemList = Required<MenuProps>["items"][number];
 
 type DashboardLayoutType = {
   title: string;
-  breadcrumb?: { title: string; url?: string }[];
-  activeMenu?: string;
+  breadcrumb: { title: string; url?: string | false }[];
+  activeMenu: string;
   innerSidebarMenu?: MenuItemList[];
   innerSidebarActiveMenu?: string;
   extra?: React.ReactNode;

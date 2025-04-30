@@ -53,7 +53,15 @@ export default function Error({ status }: ErrorType) {
 
   if (status === 403 && authUser) {
     return (
-      <DashboardLayout title={title ?? ""}>
+      <DashboardLayout
+        title={title ?? ""}
+        breadcrumb={[
+          {
+            title: title ?? "",
+          },
+        ]}
+        activeMenu=""
+      >
         <ErrorContent />
       </DashboardLayout>
     );

@@ -4,14 +4,17 @@ import { usePage } from "@inertiajs/react";
 import { Button, ConfigProvider, Dropdown, Menu, MenuProps, theme } from "antd";
 import { useResponsive } from "antd-style";
 
-type MenuItemList = Required<MenuProps>["items"][number];
-
 type DashboardInnerSidebarType = {
   innerSidebarMenu?: MenuItemList[];
   innerSidebarActiveMenu?: string;
 };
 
-export default function DashboardInnerSidebar({ innerSidebarMenu, innerSidebarActiveMenu }: DashboardInnerSidebarType) {
+type MenuItemList = Required<MenuProps>["items"][number];
+
+export default function DashboardInnerSidebar({
+  innerSidebarMenu,
+  innerSidebarActiveMenu = "",
+}: DashboardInnerSidebarType) {
   const { mobile } = useResponsive();
   const { locale } = usePage<SharedData>().props;
 

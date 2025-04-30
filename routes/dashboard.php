@@ -8,7 +8,7 @@ use App\Http\Controllers\Dashboard\Setting\DeviceSessionController as SettingDev
 use App\Http\Controllers\Dashboard\Setting\PasswordController as SettingPasswordController;
 use App\Http\Controllers\Dashboard\Setting\ProfileController as SettingProfileController;
 
-Route::prefix("dashboard")->middleware(["auth", "verified", "password.confirm"])->group(function (): void {
+Route::prefix("dashboard")->middleware(["auth"])->group(function (): void {
     // Dashboard
     Route::get("/", [DashboardController::class, "index"])->name("dashboard.index");
 

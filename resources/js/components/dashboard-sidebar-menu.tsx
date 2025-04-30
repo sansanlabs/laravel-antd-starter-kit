@@ -2,16 +2,7 @@ import { __, findParentPath } from "@/lib/utils";
 import { MenuItem, SharedData } from "@/types";
 import { Link, usePage } from "@inertiajs/react";
 import { ConfigProvider, Flex, Menu, MenuProps, theme } from "antd";
-import {
-  LuChartPie,
-  LuFolderKey,
-  LuHistory,
-  LuKey,
-  LuMinus,
-  LuPlus,
-  LuShieldCheck,
-  LuUsersRound,
-} from "react-icons/lu";
+import { LuBookKey, LuChartPie, LuKey, LuMinus, LuPlus, LuShieldCheck } from "react-icons/lu";
 import { SiLaravel } from "react-icons/si";
 
 type DashboardSidebarMenuType = {
@@ -43,12 +34,12 @@ export default function DashboardSidebarMenu({ activeMenu = "", isSidebarPanelCo
     {
       key: "roles-and-permissions",
       label: __(locale, "lang.roles_and_permissions"),
-      icon: <LuFolderKey size={16} />,
+      icon: <LuShieldCheck size={16} />,
       children: [
         {
           key: "roles",
           label: <Link href={route("roles.index")}>{__(locale, "lang.roles")}</Link>,
-          icon: <LuShieldCheck size={16} />,
+          icon: <LuBookKey size={16} />,
         },
         {
           key: "permissions",
@@ -69,7 +60,7 @@ export default function DashboardSidebarMenu({ activeMenu = "", isSidebarPanelCo
       ),
       icon: <SiLaravel size={16} style={{ strokeWidth: 0.6 }} />,
     },
-  ].filter(Boolean);
+  ].filter(Boolean) as MenuItemList[];
 
   const {
     token: { colorText, colorFillSecondary, colorFillQuaternary },
@@ -102,13 +93,11 @@ export default function DashboardSidebarMenu({ activeMenu = "", isSidebarPanelCo
           theme="dark"
           defaultOpenKeys={isSidebarPanelCollapsed ? [] : findParentPath(items as MenuItem[], activeMenu)}
           defaultSelectedKeys={[activeMenu]}
-          expandIcon={({ isOpen }) => {
-            return (
-              <div style={{ position: "absolute", right: 8, top: 2 }}>
-                {isOpen ? <LuMinus size={14} /> : <LuPlus size={14} />}
-              </div>
-            );
-          }}
+          expandIcon={({ isOpen }) => (
+            <div style={{ position: "absolute", right: 8, top: 2 }}>
+              {isOpen ? <LuMinus size={14} /> : <LuPlus size={14} />}
+            </div>
+          )}
         />
       </ConfigProvider>
     </Flex>
