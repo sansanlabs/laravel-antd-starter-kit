@@ -94,7 +94,7 @@ class RoleController extends Controller {
       ->get()
       ->toArray();
     $rolePermission = permissionFormatted($rolePermission);
-    $selectedCollapseIds = array_map(fn($item) => $item["name"], $rolePermission);
+    $selectedCollapseIds = collect($rolePermission)->pluck("options")->flatten(1)->pluck("name");
 
     return inertia("dashboard/roles-and-permissions/roles/show", [
       "role" => $role,
@@ -120,7 +120,7 @@ class RoleController extends Controller {
       ->get()
       ->toArray();
     $rolePermission = permissionFormatted($rolePermission);
-    $selectedCollapseIds = array_map(fn($item) => $item["name"], $rolePermission);
+    $selectedCollapseIds = collect($rolePermission)->pluck("options")->flatten(1)->pluck("name");
 
     return inertia("dashboard/roles-and-permissions/roles/edit", [
       "role" => $role,

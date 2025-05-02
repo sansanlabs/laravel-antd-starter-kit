@@ -25,7 +25,24 @@ export default function Index({ allPermissions, totalRoles }: IndexType) {
   const { locale } = usePage<SharedData>().props;
   const { colorBorderSecondary } = useTheme();
 
-  const [permissionsDataSource, setPermissionsDataSource] = useState<IndexType["allPermissions"]>(allPermissions);
+  const [keyword, setKeyword] = useState("");
+
+  const permissionsDataSource = allPermissions
+    .map((permission) => {
+      const filteredOptions = permission.options.filter(
+        (option) => option.name.toLowerCase().includes(keyword) || option.description.toLowerCase().includes(keyword)
+      );
+
+      if (filteredOptions.length > 0) {
+        return {
+          ...permission,
+          options: filteredOptions,
+        };
+      }
+
+      return null;
+    })
+    .filter(Boolean) as IndexType["allPermissions"];
 
   return (
     <DashboardLayout
@@ -46,31 +63,10 @@ export default function Index({ allPermissions, totalRoles }: IndexType) {
           placeholder={__(locale, "lang.search_here")}
           onPressEnter={(e: React.KeyboardEvent<HTMLInputElement>) => {
             const keyword = e.currentTarget.value.trim();
-
             const lowerKeyword = keyword.toLowerCase();
-
-            const permissionFiltered = allPermissions
-              .map((permission) => {
-                const filteredOptions = permission.options.filter(
-                  (option) =>
-                    option.name.toLowerCase().includes(lowerKeyword) ||
-                    option.description.toLowerCase().includes(lowerKeyword)
-                );
-
-                if (filteredOptions.length > 0) {
-                  return {
-                    ...permission,
-                    options: filteredOptions,
-                  };
-                }
-
-                return null;
-              })
-              .filter(Boolean);
-
-            setPermissionsDataSource(permissionFiltered as IndexType["allPermissions"]);
+            setKeyword(lowerKeyword);
           }}
-          onClear={() => setPermissionsDataSource(allPermissions)}
+          onClear={() => setKeyword("")}
         />
       }
     >

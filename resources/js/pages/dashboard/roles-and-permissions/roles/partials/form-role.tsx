@@ -169,7 +169,7 @@ export default function FormRole({ role, permissions, selectedCollapseIds }: For
                   setSelectedPermissions(selectedPermission);
                 },
                 checkStrictly: false,
-                selectedRowKeys: selectedCollapseIds,
+                defaultSelectedRowKeys: selectedCollapseIds,
               }}
               expandable={{
                 expandRowByClick: true,
