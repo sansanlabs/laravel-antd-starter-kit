@@ -11,22 +11,24 @@ export default function Welcome() {
       <Head title="Welcome" />
 
       <Layout style={{ minHeight: "100dvh" }}>
-        {auth.user ? (
-          <Link href={route("dashboard.index")}>
-            <Button>{__(locale, "lang.dashboard")}</Button>
-          </Link>
-        ) : (
-          <Flex gap={8}>
-            <Link href={route("login")}>
-              <Button type="link">{__(locale, "auth.login")}</Button>
+        <Flex justify="center" align="center" style={{ minHeight: "100dvh" }}>
+          {auth.user ? (
+            <Link href={route("dashboard.index")}>
+              <Button>{__(locale, "lang.dashboard")}</Button>
             </Link>
-            <Link href={route("register")}>
-              <Button color="primary" variant="outlined">
-                {__(locale, "auth.register")}
-              </Button>
-            </Link>
-          </Flex>
-        )}
+          ) : (
+            <Flex gap={8}>
+              <Link href={route("login")}>
+                <Button color="primary" variant="outlined">
+                  {__(locale, "auth.login")}
+                </Button>
+              </Link>
+              <Link href={route("register")}>
+                <Button type="primary">{__(locale, "auth.register")}</Button>
+              </Link>
+            </Flex>
+          )}
+        </Flex>
       </Layout>
     </>
   );
